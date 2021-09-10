@@ -10,10 +10,9 @@ const formatUser = async (user) => ({
     uid: user.uid,
     email: user.email,
     name: user.displayName,
-    token: user.za,
     provider: user.providerData[0].providerId,
     photoUrl: user.photoURL,
-})
+});
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -25,6 +24,16 @@ export function AuthProvider({ children }) {
 
             setUser(formatedUser);
             setSession(true);
+            
+            await fetch("/api/users/" + formatedUser.uid, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formatedUser)
+            }).then(res => {
+                console.log(res.json());
+            });
 
             return formatedUser.email;
         }
@@ -105,7 +114,7 @@ export function AuthProvider({ children }) {
     const signinGoogle = async () => {
         try {
             setLoading(true);
-                
+
             var error = {
                 message: null
             }
