@@ -174,7 +174,6 @@ const NewPost = ({ feelings }) => {
                             }
                             disableCreateItem={true}
                             {...register("feeling", {
-                                //validate: {validate}
                                 required: selectedFeelings.length === 0 ? "Selecione pelo menos um sentimento" : ""
                             })}
                         />
