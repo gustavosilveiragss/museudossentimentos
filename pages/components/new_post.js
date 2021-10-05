@@ -12,9 +12,7 @@ import {
     FormLabel,
     Wrap,
     WrapItem,
-    Input,
-    Select,
-    Option
+    Input
 } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from "react-hook-form";
@@ -175,6 +173,10 @@ const NewPost = ({ feelings }) => {
                                 handleSelectedItemsChange(changes)
                             }
                             disableCreateItem={true}
+                            {...register("feeling", {
+                                //validate: {validate}
+                                required: selectedFeelings.length === 0 ? "Selecione pelo menos um sentimento" : ""
+                            })}
                         />
                         <FormErrorMessage>
                             {errors.feeling && errors.feeling.message}
