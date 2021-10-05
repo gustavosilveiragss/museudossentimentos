@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     await dbRef.push().set({
         uid: uuidv4(),
         url: req.body.url || "",
-        feelingUid: req.body.feelingUid || "",
+        feelingsUids: req.body.feelingsUids,
         type: req.body.type,
         description: req.body.description,
         title: req.body.title,

@@ -91,11 +91,19 @@ const NewPost = ({ feelings }) => {
     };
 
     const handleSend = async (values) => {
+        values.feelingsUids = [];
+
+        for (let i = 0; i < selectedFeelings.length; i++) {
+            const f = selectedFeelings[i];
+
+            values.feelingsUids.push(f.value);
+        }
+
         values.type = type;
 
         values.authorUid = user.uid;
 
-        await fetch("/api/posts/new/", {
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
