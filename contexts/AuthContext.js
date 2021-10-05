@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
                 },
                 body: JSON.stringify(formatedUser)
             }).then(res => {
-                console.log(res.json());
+                //console.log(res.json());
             });
 
             return formatedUser.email;
