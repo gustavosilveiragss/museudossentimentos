@@ -17,6 +17,7 @@ import {
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
+import Dropzone from 'react-dropzone'
 
 import RadioCard from "./radio_card"
 import useAuth from "../../hooks/useAuth";
@@ -28,9 +29,10 @@ const NewPost = ({ feelings }) => {
         formState: { errors, isSubmitting }
     } = useForm();
 
-    // TODO: change this to an enum
-    const type_options = ["poesia", "pintura", "escultura", "fotografia", "video", "texto", "outro"]
+    const type_options = ["poesia", "pintura", "escultura", "fotografia", "video", "texto"]
 
+    // just dont question it
+    var updatedType = "poesia";
     const [type, setType] = React.useState("poesia");
 
     const [mediaComponent, setMediaComponent] = React.useState();
@@ -49,15 +51,22 @@ const NewPost = ({ feelings }) => {
     const [pickerFeelings, setPickerFeelings] = React.useState(feelingsArray);
     const [selectedFeelings, setSelectedFeelings] = React.useState(new Array());
 
+    var fileElement = <div></div>;
+    var selectedFile = null;
+
     const handleSelectedItemsChange = (changes) => {
         if (changes) {
             setSelectedFeelings(changes.selectedItems)
         };
     };
 
-    const handleTypeRadio = (e) => {
+    const handleTypeRadio = async (e) => {
         const value = e.target.value;
+        
+        updatedType = value;
         setType(value);
+
+        selectedFile = null;
 
         switch (value) {
             case "poesia":
@@ -77,18 +86,46 @@ const NewPost = ({ feelings }) => {
                     </FormControl>
                 );
                 break;
-            case "pintura" || "escultura":
-                //file drop
+            case "pintura":
+            case "fotografia":
+                buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
+                break;
+            case "escultura":
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
                 break;
             case "video":
-                // file drop
-                break;
-            case "outro":
-                // select content type
-                // name the type
+                buildDropzone("video/mp4", ".mp4");
                 break;
         }
     };
+
+    const buildDropzone = (accept, extensions) => {
+        setMediaComponent(
+            <FormControl id="content" isInvalid={errors.content}>
+                <FormLabel>Conteúdo</FormLabel>
+                <Dropzone accept={accept} onDrop={fileDrop}>
+                    {({ getRootProps, getInputProps }) => (
+                        <section>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <p>Arraste ou selecione o arquivo</p>
+                                <em>(Apenas arquivos do tipo {extensions} serão aceitos)</em>
+                                <aside>
+                                    <h4>Arquivo</h4>
+                                    <ul>
+                                        {fileElement}
+                                    </ul>
+                                </aside>
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+                <FormErrorMessage>
+                    {errors.content && errors.content.message}
+                </FormErrorMessage>
+            </FormControl>
+        );
+    }
 
     const handleSend = async (values) => {
         values.feelingsUids = [];
@@ -121,6 +158,39 @@ const NewPost = ({ feelings }) => {
     });
 
     const group = getRootProps();
+
+    const fileDrop = async (files) => {
+        const file = files[0];
+
+        var reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        reader.onload = () => {
+
+            fileElement = (<li key={file.path}>
+                {file.path} - {file.size} bytes
+            </li>);
+
+            selectedFile = file;
+
+            // YEAH
+            // This is a really bad solution
+            // SO WHAT
+            switch (updatedType) {
+                case "pintura":
+                case "fotografia":
+                    buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
+                    break;
+                case "escultura":
+                    buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
+                    break;
+                case "video":
+                    buildDropzone("video/mp4", ".mp4");
+                    break;
+            }
+        };
+    }
 
     return (
         <Flex
