@@ -16,10 +16,10 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { CUIAutoComplete } from 'chakra-ui-autocomplete'
-import Dropzone from 'react-dropzone'
+import { CUIAutoComplete } from 'chakra-ui-autocomplete';
+import Dropzone from 'react-dropzone';
 
-import RadioCard from "./radio_card"
+import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
 
 const NewPost = ({ feelings }) => {
@@ -52,7 +52,7 @@ const NewPost = ({ feelings }) => {
     const [selectedFeelings, setSelectedFeelings] = React.useState(new Array());
 
     var fileElement = <div></div>;
-    var selectedFile = null;
+    const [selectedFile, setSelectedFile] = React.useState(undefined);
 
     const handleSelectedItemsChange = (changes) => {
         if (changes) {
@@ -62,11 +62,11 @@ const NewPost = ({ feelings }) => {
 
     const handleTypeRadio = async (e) => {
         const value = e.target.value;
-        
+
         updatedType = value;
         setType(value);
 
-        selectedFile = null;
+        setSelectedFile(undefined);
 
         switch (value) {
             case "poesia":
@@ -140,6 +140,19 @@ const NewPost = ({ feelings }) => {
 
         values.authorUid = user.uid;
 
+        values.selectedFile = selectedFile;
+
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(values)
+        }).then(res => res.json()).then(data => {
+            values.url = data.url;
+            values.selectedFile = null;
+        });
+
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
             method: "POST",
             headers: {
@@ -159,20 +172,20 @@ const NewPost = ({ feelings }) => {
 
     const group = getRootProps();
 
-    const fileDrop = async (files) => {
+    const fileDrop = (files) => {
         const file = files[0];
 
         var reader = new FileReader();
 
         reader.readAsDataURL(file);
 
-        reader.onload = () => {
+        reader.onload = socorro => {
 
             fileElement = (<li key={file.path}>
                 {file.path} - {file.size} bytes
             </li>);
 
-            selectedFile = file;
+            setSelectedFile(socorro.target.result.split(',')[1]);
 
             // YEAH
             // This is a really bad solution
