@@ -18,6 +18,7 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 import { CUIAutoComplete } from 'chakra-ui-autocomplete';
 import Dropzone from 'react-dropzone';
+import bytes from "bytes";
 
 import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
@@ -26,6 +27,7 @@ const NewPost = ({ feelings }) => {
     const {
         handleSubmit,
         register,
+        setError,
         formState: { errors, isSubmitting }
     } = useForm();
 
@@ -97,28 +99,36 @@ const NewPost = ({ feelings }) => {
                 break;
             case "pintura":
             case "fotografia":
-                buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
+                buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
                 break;
             case "escultura":
-                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "7kb");
                 break;
             case "video":
-                buildDropzone("video/mp4", ".mp4");
+                buildDropzone("video/mp4", ".mp4", "100mb");
+                break;
+            case "música":
+            case "áudio":
+                buildDropzone("audio/mpeg", ".mp1, .mp2 e .mp3", "50mb");
                 break;
         }
     };
 
-    const buildDropzone = (accept, extensions) => {
+    const buildDropzone = (accept, extensions, maxSize) => {
         setMediaComponent(
             <FormControl id="content" isInvalid={errors.content}>
                 <FormLabel>Conteúdo</FormLabel>
-                <Dropzone accept={accept} onDrop={fileDrop}>
+                <Dropzone
+                    accept={accept}
+                    maxSize={bytes(maxSize)}
+                    onDrop={fileDrop}
+                >
                     {({ getRootProps, getInputProps }) => (
                         <section>
                             <div {...getRootProps()}>
                                 <input {...getInputProps()} />
                                 <p>Arraste ou selecione o arquivo</p>
-                                <em>(Apenas arquivos do tipo {extensions} serão aceitos)</em>
+                                <em>(Apenas arquivos do tipo {extensions} e menores que {maxSize} serão aceitos)</em>
                                 <aside>
                                     <h4>Arquivo</h4>
                                     <ul>
@@ -130,7 +140,7 @@ const NewPost = ({ feelings }) => {
                     )}
                 </Dropzone>
                 <FormErrorMessage>
-                    {errors.content && errors.content.message}
+                    {errors.dropzone && errors.dropzone.message}
                 </FormErrorMessage>
             </FormControl>
         );
@@ -151,7 +161,7 @@ const NewPost = ({ feelings }) => {
 
         values.selectedFile = selectedFile;
 
-        if (type == "pintura" || type == "escultura" || type == "fotografia") {
+        if (type == "pintura" || type == "fotografia") {
             // Imgur handling
 
             await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
@@ -164,6 +174,29 @@ const NewPost = ({ feelings }) => {
                 values.url = data.url;
                 values.selectedFile = null;
             });
+        }
+
+        else if (type == "escultura") {
+            // check type
+            return;
+        }
+
+        else if (type == "música" || type == "áudio") {
+            // storage thingy
+
+            var data = new FormData();
+            data.append("category", type == "música" ? "music" : "audio");
+            data.append("file", values.selectedFile);
+
+            await fetch(`${process.env.NEXT_PUBLIC_URL}/api/audio/new`, {
+                method: "POST",
+                body: data
+            }).then(res => res.json()).then(data => {
+                // values.url = data.url;
+                values.selectedFile = null;
+            });
+
+            return;
         }
 
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
@@ -185,7 +218,13 @@ const NewPost = ({ feelings }) => {
 
     const group = getRootProps();
 
-    const fileDrop = (files) => {
+    const fileDrop = (files, rejectedFiles) => {
+        if (rejectedFiles.length !== 0) {
+            alert("arquivo grande demais, verifique o tamanho permitido");
+
+            return;
+        }
+
         const file = files[0];
 
         var reader = new FileReader();
@@ -195,27 +234,41 @@ const NewPost = ({ feelings }) => {
         reader.onload = socorro => {
 
             fileElement = (<li key={file.path}>
-                {file.path} - {file.size} bytes
+                {file.path} - {bytes(file.size, { unitSeparator: " " })}
             </li>);
 
-            setSelectedFile(socorro.target.result.split(',')[1]);
+            if (file.type === "audio/mpeg") {
+                setSelectedFile(file);
+            }
+
+            else {
+                setSelectedFile(socorro.target.result.split(',')[1]);
+            }
 
             // YEAH
             // This is a really bad solution
             // SO WHAT
-            switch (updatedType) {
-                case "pintura":
-                case "fotografia":
-                    buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
-                    break;
-                case "escultura":
-                    buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
-                    break;
-                case "video":
-                    buildDropzone("video/mp4", ".mp4");
-                    break;
-            }
+            caguei(updatedType)
         };
+    }
+
+    const caguei = type => {
+        switch (type) {
+            case "pintura":
+            case "fotografia":
+                buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
+                break;
+            case "escultura":
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "7kb");
+                break;
+            case "video":
+                buildDropzone("video/mp4", ".mp4", "100mb");
+                break;
+            case "música":
+            case "áudio":
+                buildDropzone("audio/mpeg", ".mp1, .mp2 e .mp3", "50mb");
+                break;
+        }
     }
 
     return (
