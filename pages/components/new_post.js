@@ -29,7 +29,16 @@ const NewPost = ({ feelings }) => {
         formState: { errors, isSubmitting }
     } = useForm();
 
-    const type_options = ["poesia", "pintura", "escultura", "fotografia", "video", "texto"]
+    const type_options = [
+        "poesia",
+        "pintura",
+        "escultura",
+        "fotografia",
+        "video",
+        "texto",
+        "música",
+        "áudio"
+    ];
 
     // just dont question it
     var updatedType = "poesia";
@@ -142,16 +151,20 @@ const NewPost = ({ feelings }) => {
 
         values.selectedFile = selectedFile;
 
-        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(values)
-        }).then(res => res.json()).then(data => {
-            values.url = data.url;
-            values.selectedFile = null;
-        });
+        if (type == "pintura" || type == "escultura" || type == "fotografia") {
+            // Imgur handling
+
+            await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(values)
+            }).then(res => res.json()).then(data => {
+                values.url = data.url;
+                values.selectedFile = null;
+            });
+        }
 
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
             method: "POST",
