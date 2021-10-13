@@ -12,267 +12,61 @@ import {
     FormLabel,
     Wrap,
     WrapItem,
-    Input,
-    Select,
-    Option
+    Input
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import React from 'react';
 import { useForm } from "react-hook-form";
-import { CUIAutoComplete } from 'chakra-ui-autocomplete'
+import { CUIAutoComplete } from 'chakra-ui-autocomplete';
+import Dropzone from 'react-dropzone';
 
-import RadioCard from "./radio_card"
+import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
 
-// send this to the db
-const feelings = [
-    { label: "aceitação" },
-    { label: "admiração" },
-    { label: "adoração" },
-    { label: "afeição" },
-    { label: "afeto" },
-    { label: "agrado" },
-    { label: "alegria" },
-    { label: "alento" },
-    { label: "alívio" },
-    { label: "ambição" },
-    { label: "amor" },
-    { label: "animação" },
-    { label: "ânimo" },
-    { label: "apego" },
-    { label: "apreciação" },
-    { label: "ardor" },
-    { label: "arrebatamento" },
-    { label: "assombro" },
-    { label: "atração" },
-    { label: "bem-estar" },
-    { label: "bom humor" },
-    { label: "bondade" },
-    { label: "brio" },
-    { label: "calma" },
-    { label: "carinho" },
-    { label: "carisma" },
-    { label: "certeza" },
-    { label: "comoção" },
-    { label: "compaixão" },
-    { label: "complacência" },
-    { label: "completude" },
-    { label: "compreensão" },
-    { label: "comprometimento" },
-    { label: "confiança" },
-    { label: "conforto" },
-    { label: "consideração" },
-    { label: "contentamento" },
-    { label: "convicção" },
-    { label: "coragem" },
-    { label: "crença" },
-    { label: "curiosidade" },
-    { label: "desejo" },
-    { label: "despreocupação" },
-    { label: "deslumbramento" },
-    { label: "desvelo" },
-    { label: "determinação" },
-    { label: "devoção" },
-    { label: "dignidade" },
-    { label: "disposição" },
-    { label: "diversão" },
-    { label: "efusão" },
-    { label: "emoção" },
-    { label: "empatia" },
-    { label: "empolgação" },
-    { label: "encantamento" },
-    { label: "entusiasmo" },
-    { label: "equilíbrio" },
-    { label: "espanto" },
-    { label: "esperança" },
-    { label: "euforia" },
-    { label: "excitação" },
-    { label: "êxtase" },
-    { label: "fascínio" },
-    { label: "fé" },
-    { label: "felicidade" },
-    { label: "força" },
-    { label: "generosidade" },
-    { label: "gentileza" },
-    { label: "gratidão" },
-    { label: "honra" },
-    { label: "independência" },
-    { label: "interesse" },
-    { label: "inspiração" },
-    { label: "júbilo" },
-    { label: "liberdade" },
-    { label: "motivação" },
-    { label: "orgulho" },
-    { label: "otimismo" },
-    { label: "paciência" },
-    { label: "paixão" },
-    { label: "paz" },
-    { label: "piedade" },
-    { label: "plenitude" },
-    { label: "poder" },
-    { label: "prazer" },
-    { label: "proteção" },
-    { label: "pudor" },
-    { label: "realização" },
-    { label: "relaxamento" },
-    { label: "resiliência" },
-    { label: "respeito" },
-    { label: "responsabilidade" },
-    { label: "satisfação" },
-    { label: "segurança" },
-    { label: "serenidade" },
-    { label: "simpatia" },
-    { label: "solidariedade" },
-    { label: "surpresa" },
-    { label: "tenacidade" },
-    { label: "ternura" },
-    { label: "tolerância" },
-    { label: "tranquilidade" },
-    { label: "triunfo" },
-    { label: "vaidade" },
-    { label: "valentia" },
-    { label: "vivacidade" },
-    { label: "zelo" },
-    { label: "agonia" },
-    { label: "alarme" },
-    { label: "amargura" },
-    { label: "angústia" },
-    { label: "ânsia" },
-    { label: "ansiedade" },
-    { label: "antipatia" },
-    { label: "apatia" },
-    { label: "apreensão" },
-    { label: "arrependimento" },
-    { label: "aversão" },
-    { label: "carência" },
-    { label: "choque" },
-    { label: "ciúme" },
-    { label: "cólera" },
-    { label: "confusão" },
-    { label: "consternação" },
-    { label: "constrangimento" },
-    { label: "covardia" },
-    { label: "culpa" },
-    { label: "decepção" },
-    { label: "depressão" },
-    { label: "derrota" },
-    { label: "desânimo" },
-    { label: "desapego" },
-    { label: "desapontamento" },
-    { label: "desconfiança" },
-    { label: "desconforto" },
-    { label: "desconsolo" },
-    { label: "descrença" },
-    { label: "desencanto" },
-    { label: "desespero" },
-    { label: "desgosto" },
-    { label: "desilusão" },
-    { label: "desinteresse" },
-    { label: "desorientação" },
-    { label: "dó" },
-    { label: "dor" },
-    { label: "dúvida" },
-    { label: "egoísmo" },
-    { label: "embaraço" },
-    { label: "enfado" },
-    { label: "estresse" },
-    { label: "frustração" },
-    { label: "fúria" },
-    { label: "hesitação" },
-    { label: "histeria" },
-    { label: "horror" },
-    { label: "hostilidade" },
-    { label: "humilhação" },
-    { label: "impaciência" },
-    { label: "incômodo" },
-    { label: "incredulidade" },
-    { label: "indecisão" },
-    { label: "indiferença" },
-    { label: "indignação" },
-    { label: "infelicidade" },
-    { label: "ingratidão" },
-    { label: "inibição" },
-    { label: "inquietação" },
-    { label: "insatisfação" },
-    { label: "insegurança" },
-    { label: "inveja" },
-    { label: "ira" },
-    { label: "irritação" },
-    { label: "letargia" },
-    { label: "loucura" },
-    { label: "luto" },
-    { label: "mágoa" },
-    { label: "mau humor" },
-    { label: "medo" },
-    { label: "melancolia" },
-    { label: "nervosismo" },
-    { label: "nojo" },
-    { label: "nostalgia" },
-    { label: "ódio" },
-    { label: "pânico" },
-    { label: "pavor" },
-    { label: "pena" },
-    { label: "perda" },
-    { label: "perturbação" },
-    { label: "pesar" },
-    { label: "pessimismo" },
-    { label: "posse" },
-    { label: "preconceito" },
-    { label: "preocupação" },
-    { label: "raiva" },
-    { label: "rancor" },
-    { label: "receio" },
-    { label: "remorso" },
-    { label: "repulsa" },
-    { label: "ressentimento" },
-    { label: "revolta" },
-    { label: "saturação" },
-    { label: "saudade" },
-    { label: "sofrimento" },
-    { label: "solidão" },
-    { label: "tédio" },
-    { label: "temor" },
-    { label: "tensão" },
-    { label: "terror" },
-    { label: "torpor" },
-    { label: "tristeza" },
-    { label: "vergonha" },
-    { label: "vulnerabilidade" },
-    { label: "zanga" },
-];
-
-const NewPost = () => {
-
+const NewPost = ({ feelings }) => {
     const {
         handleSubmit,
         register,
         formState: { errors, isSubmitting }
     } = useForm();
 
-    // TODO: change this to an enum
-    const type_options = ["poesia", "pintura", "escultura", "fotografia", "video", "texto", "outro"]
+    const type_options = ["poesia", "pintura", "escultura", "fotografia", "video", "texto"]
 
-    const [type, setType] = useState("poesia");
+    // just dont question it
+    var updatedType = "poesia";
+    const [type, setType] = React.useState("poesia");
 
-    const [mediaComponent, setMediaComponent] = useState();
+    const [mediaComponent, setMediaComponent] = React.useState();
 
     const { user } = useAuth();
 
-    const [pickerFeelings, setPickerFeelings] = useState(feelings);
-    const [selectedFeelings, setSelectedFeelings] = useState(new Array());
+    var feelingsArray = Object.keys(feelings).map(key => {
+        var final = {
+            label: feelings[key].title,
+            value: feelings[key].uid,
+        };
 
-    const handleCreateItem = (item) => {
-        setPickerFeelings((curr) => [...curr, item]);
-        setSelectedFeelings((curr) => [...curr, item]);
-        // register on db
-    };
+        return final;
+    });
+
+    const [pickerFeelings, setPickerFeelings] = React.useState(feelingsArray);
+    const [selectedFeelings, setSelectedFeelings] = React.useState(new Array());
+
+    var fileElement = <div></div>;
+    const [selectedFile, setSelectedFile] = React.useState(undefined);
 
     const handleSelectedItemsChange = (changes) => {
-        setSelectedFeelings(changes.selectedItems);
+        if (changes) {
+            setSelectedFeelings(changes.selectedItems)
+        };
     };
 
-    const handleTypeRadio = (e) => {
+    const handleTypeRadio = async (e) => {
         const value = e.target.value;
+
+        updatedType = value;
         setType(value);
+
+        setSelectedFile(undefined);
 
         switch (value) {
             case "poesia":
@@ -292,25 +86,74 @@ const NewPost = () => {
                     </FormControl>
                 );
                 break;
-            case "pintura" || "escultura":
-                //file drop
+            case "pintura":
+            case "fotografia":
+                buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
+                break;
+            case "escultura":
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
                 break;
             case "video":
-                // file drop
-                break;
-            case "outro":
-                // select content type
-                // name the type
+                buildDropzone("video/mp4", ".mp4");
                 break;
         }
     };
 
+    const buildDropzone = (accept, extensions) => {
+        setMediaComponent(
+            <FormControl id="content" isInvalid={errors.content}>
+                <FormLabel>Conteúdo</FormLabel>
+                <Dropzone accept={accept} onDrop={fileDrop}>
+                    {({ getRootProps, getInputProps }) => (
+                        <section>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <p>Arraste ou selecione o arquivo</p>
+                                <em>(Apenas arquivos do tipo {extensions} serão aceitos)</em>
+                                <aside>
+                                    <h4>Arquivo</h4>
+                                    <ul>
+                                        {fileElement}
+                                    </ul>
+                                </aside>
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+                <FormErrorMessage>
+                    {errors.content && errors.content.message}
+                </FormErrorMessage>
+            </FormControl>
+        );
+    }
+
     const handleSend = async (values) => {
+        values.feelingsUids = [];
+
+        for (let i = 0; i < selectedFeelings.length; i++) {
+            const f = selectedFeelings[i];
+
+            values.feelingsUids.push(f.value);
+        }
+
         values.type = type;
 
         values.authorUid = user.uid;
 
-        await fetch("/api/posts/new/", {
+        values.selectedFile = selectedFile;
+
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(values)
+        }).then(res => res.json()).then(data => {
+            values.url = data.url;
+            values.selectedFile = null;
+        });
+
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -328,6 +171,39 @@ const NewPost = () => {
     });
 
     const group = getRootProps();
+
+    const fileDrop = (files) => {
+        const file = files[0];
+
+        var reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        reader.onload = socorro => {
+
+            fileElement = (<li key={file.path}>
+                {file.path} - {file.size} bytes
+            </li>);
+
+            setSelectedFile(socorro.target.result.split(',')[1]);
+
+            // YEAH
+            // This is a really bad solution
+            // SO WHAT
+            switch (updatedType) {
+                case "pintura":
+                case "fotografia":
+                    buildDropzone("image/jpeg, image/png", ".jpeg ou .png");
+                    break;
+                case "escultura":
+                    buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4");
+                    break;
+                case "video":
+                    buildDropzone("video/mp4", ".mp4");
+                    break;
+            }
+        };
+    }
 
     return (
         <Flex
@@ -381,13 +257,16 @@ const NewPost = () => {
                         <CUIAutoComplete
                             label="Selecione os sentimentos"
                             placeholder="Selecione um sentimento já existente, ou registre um novo"
-                            onCreateItem={handleCreateItem}
                             items={pickerFeelings}
                             selectedItems={selectedFeelings}
                             hideToggleButton={true}
                             onSelectedItemsChange={(changes) =>
                                 handleSelectedItemsChange(changes)
                             }
+                            disableCreateItem={true}
+                            {...register("feeling", {
+                                required: selectedFeelings.length === 0 ? "Selecione pelo menos um sentimento" : ""
+                            })}
                         />
                         <FormErrorMessage>
                             {errors.feeling && errors.feeling.message}

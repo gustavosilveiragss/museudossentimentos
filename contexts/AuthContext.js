@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
                 },
                 body: JSON.stringify(formatedUser)
             }).then(res => {
-                console.log(res.json());
+                //console.log(res.json());
             });
 
             return formatedUser.email;
@@ -51,35 +51,6 @@ export function AuthProvider({ children }) {
             });
         } else {
             cookie.remove('auth');
-        }
-    }
-
-    const signinFacebook = async () => {
-        try {
-            setLoading(true);
-
-            var error = {
-                message: null
-            }
-
-            const response = await firebase
-                .auth()
-                .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-                .catch(response => {
-                    if (response.code == "auth/account-exists-with-different-credential") {
-                        error.message = "Já existe uma conta com este email registrada por outra plataforma\nTente realizar o login com uma plataforma diferente"
-                    }
-                });
-
-            if (error.message !== null) {
-                return error;
-            }
-
-            handleUser(response.user);
-
-            Router.push('/dashboard');
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -161,7 +132,6 @@ export function AuthProvider({ children }) {
         user,
         loading,
         signinGoogle,
-        signinFacebook,
         signinGithub,
         signout
     }}>{children}</AuthContext.Provider>;
