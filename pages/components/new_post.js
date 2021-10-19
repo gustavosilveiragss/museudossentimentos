@@ -184,9 +184,15 @@ const NewPost = ({ feelings }) => {
         else if (type == "música" || type == "áudio") {
             // storage thingy
 
+            const extension = values.selectedFile.name.slice((values.selectedFile.name.lastIndexOf(".") - 1 >>> 0) + 2);
+
+            var buf = new Buffer.from(await values.selectedFile.arrayBuffer());
+
             var data = new FormData();
             data.append("category", type == "música" ? "music" : "audio");
-            data.append("file", values.selectedFile);
+            data.append("file", JSON.stringify(buf));
+            data.append("type", values.selectedFile.type);
+            data.append("extension", extension);
 
             await fetch(`${process.env.NEXT_PUBLIC_URL}/api/audio/new`, {
                 method: "POST",
