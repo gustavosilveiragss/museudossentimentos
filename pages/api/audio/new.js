@@ -23,33 +23,29 @@ export default async function handler(req, res) {
 
   var buffer = new Buffer.from(JSON.parse(data.fields.file).data);
 
-  console.log(buffer)
-
   var fileRef = storageRef.child(`${data.fields.category}/${uuidv4()}.${data.fields.extension}`);
 
   var error = "";
 
-  await fileRef.put(buffer, {
-    contentType: data.fields.type
-  }).catch(err => {
-    console.log("deu ruim" + err)
+  // sim, eu poderia pegar a url ali no ref, mas preferi ir pelo try catch só pq sim
+  var fileUrl = "";
+
+  try {
+    var snapshot = await fileRef.put(buffer, {
+      contentType: data.fields.type
+    });
+  
+    fileUrl = await snapshot.ref.getDownloadURL();
+  } catch (err) {
     error = err;
-  });
+  }
 
   if (error !== "") {
     res.status(500).json({ error: error });
     return;
   }
 
-  /*const form = new formidable.IncomingForm();
-
-  form.keepExtensions = true;
-
-  form.parse(req, async (err, fields, files) => {
-    
-  });*/
-
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, url: fileUrl });
 }
 
 export const config = {

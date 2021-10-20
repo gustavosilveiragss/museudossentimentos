@@ -13,8 +13,6 @@ export default async function handler(req, res) {
 
   imgur.setClientId(clientId);
 
-  console.log(req.body);
-
   await imgur
     .uploadBase64(req.body.selectedFile)
     .then((json) => {

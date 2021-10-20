@@ -198,11 +198,9 @@ const NewPost = ({ feelings }) => {
                 method: "POST",
                 body: data
             }).then(res => res.json()).then(data => {
-                // values.url = data.url;
+                values.url = data.url;
                 values.selectedFile = null;
             });
-
-            return;
         }
 
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
