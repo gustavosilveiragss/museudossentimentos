@@ -12,9 +12,13 @@
     "@chakra-ui/react": "^1.6.7",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "blob-to-buffer": "^1.2.9",
+    "bytes": "^3.1.0",
     "chakra-ui-autocomplete": "^1.4.3",
     "file-base64": "^1.0.0",
     "firebase": "^9.0.1",
+    "firebase-admin": "^10.0.0",
+    "formidable": "^1.2.2",
     "framer-motion": "^4.1.17",
     "fs": "0.0.1-security",
     "imgur": "^1.0.2",
@@ -24,6 +28,7 @@
     "react-dom": "17.0.2",
     "react-dropzone": "^11.4.2",
     "react-hook-form": "^7.15.3",
+    "react-mp3-player": "^0.8.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
