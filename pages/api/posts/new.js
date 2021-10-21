@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
-        res.status(400);
+        res.status(400).json({ success: false });
         
         return;
     }

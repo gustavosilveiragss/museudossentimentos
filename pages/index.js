@@ -1,5 +1,4 @@
-import NewPost from "./components/new_post"
-import Player from "./components/player"
+import Feed from "./components/feed"
 
 export async function getStaticProps() {
     var props = {};
@@ -9,19 +8,21 @@ export async function getStaticProps() {
     var res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/feelings/fetch`, {
         method: "GET"
     });
-    var data = await res.json();
+    const feelings = await res.json();
 
-    props.feelings = data.feelings;
+    res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/fetch`, {
+        method: "GET"
+    });
+    const posts = await res.json();
+
+    props.feelings = feelings.feelings;
+    props.posts = posts.posts;
 
     return { props: { props } };
 }
 
 export default function Home({ props }) {
     return (
-        <div>
-            <NewPost {...props}>
-            </NewPost>
-            <Player {...props}></Player>
-        </div>
+        <Feed {...props}></Feed>
     );
 };

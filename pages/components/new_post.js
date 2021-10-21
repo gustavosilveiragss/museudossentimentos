@@ -194,8 +194,6 @@ const NewPost = ({ feelings }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(values)
-        }).then(res => {
-            console.log(res.json());
         });
     };
 
