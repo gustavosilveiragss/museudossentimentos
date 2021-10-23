@@ -1,24 +1,38 @@
-import NewPost from "./components/new_post"
+import Feed from "./components/feed"
 
 export async function getStaticProps() {
     var props = {};
-    
-    props.feelings = new Array();
+
+    const typeOptions = [
+        "poesia",
+        "pintura",
+        "escultura",
+        "fotografia",
+        "vídeo",
+        "texto",
+        "música",
+        "áudio"
+    ];
 
     var res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/feelings/fetch`, {
         method: "GET"
     });
-    var data = await res.json();
+    const feelings = await res.json();
 
-    props.feelings = data.feelings;
+    res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/fetch`, {
+        method: "GET"
+    });
+    const posts = await res.json();
+
+    props.feelings = feelings.feelings;
+    props.posts = posts.posts;
+    props.typeOptions = typeOptions;
 
     return { props: { props } };
 }
 
-export default function Home( { props } ) {
+export default function Home({ props }) {
     return (
-        <NewPost {...props}>
-
-        </NewPost>
+        <Feed {...props}></Feed>
     );
 };

@@ -23,24 +23,13 @@ import bytes from "bytes";
 import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
 
-const NewPost = ({ feelings }) => {
+const NewPost = ({ feelings, typeOptions }) => {
     const {
         handleSubmit,
         register,
         setError,
         formState: { errors, isSubmitting }
     } = useForm();
-
-    const type_options = [
-        "poesia",
-        "pintura",
-        "escultura",
-        "fotografia",
-        "video",
-        "texto",
-        "música",
-        "áudio"
-    ];
 
     // just dont question it
     var updatedType = "poesia";
@@ -102,10 +91,10 @@ const NewPost = ({ feelings }) => {
                 buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
                 break;
             case "escultura":
-                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "7kb");
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "50mb");
                 break;
-            case "video":
-                buildDropzone("video/mp4", ".mp4", "100mb");
+            case "vídeo":
+                buildDropzone("video/mp4", ".mp4", "300mb");
                 break;
             case "música":
             case "áudio":
@@ -161,46 +150,31 @@ const NewPost = ({ feelings }) => {
 
         values.selectedFile = selectedFile;
 
-        if (type == "pintura" || type == "fotografia") {
-            // Imgur handling
+        switch (type) {
+            case "fotografia":
+            case "pintura":
+                values = await handleImgurUpload(values);
 
-            await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(values)
-            }).then(res => res.json()).then(data => {
-                values.url = data.url;
-                values.selectedFile = null;
-            });
-        }
+                break;
 
-        else if (type == "escultura") {
-            // check type
-            return;
-        }
+            case "escultura":
+                if (values.selectedFile.type == undefined) {
+                    values = await handleImgurUpload(values);
 
-        else if (type == "música" || type == "áudio") {
-            // storage thingy
+                    break;
+                }
+                
+                values = await handleStorageUpload(values);
 
-            const extension = values.selectedFile.name.slice((values.selectedFile.name.lastIndexOf(".") - 1 >>> 0) + 2);
+                break;
 
-            var buf = new Buffer.from(await values.selectedFile.arrayBuffer());
+            case "música":
+            case "áudio":
+            case "fotografia":
+            case "vídeo":
+                values = await handleStorageUpload(values);
 
-            var data = new FormData();
-            data.append("category", type == "música" ? "music" : "audio");
-            data.append("file", JSON.stringify(buf));
-            data.append("type", values.selectedFile.type);
-            data.append("extension", extension);
-
-            await fetch(`${process.env.NEXT_PUBLIC_URL}/api/audio/new`, {
-                method: "POST",
-                body: data
-            }).then(res => res.json()).then(data => {
-                values.url = data.url;
-                values.selectedFile = null;
-            });
+                break;
         }
 
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/new`, {
@@ -209,9 +183,44 @@ const NewPost = ({ feelings }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(values)
-        }).then(res => {
-            console.log(res.json());
         });
+    };
+
+    const handleImgurUpload = async values => {
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/imgur/new`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(values)
+        }).then(res => res.json()).then(data => {
+            values.url = data.url;
+            values.selectedFile = null;
+        });
+
+        return values;
+    }
+
+    const handleStorageUpload = async values => {
+        const extension = values.selectedFile.name.slice((values.selectedFile.name.lastIndexOf(".") - 1 >>> 0) + 2);
+
+        var buf = new Buffer.from(await values.selectedFile.arrayBuffer());
+
+        var data = new FormData();
+        data.append("folder", type);
+        data.append("file", JSON.stringify(buf));
+        data.append("type", values.selectedFile.type);
+        data.append("extension", extension);
+
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
+            method: "POST",
+            body: data
+        }).then(res => res.json()).then(data => {
+            values.url = data.url;
+            values.selectedFile = null;
+        });
+
+        return values;
     };
 
     const { getRootProps, getRadioProps } = useRadioGroup({
@@ -241,7 +250,7 @@ const NewPost = ({ feelings }) => {
                 {file.path} - {bytes(file.size, { unitSeparator: " " })}
             </li>);
 
-            if (file.type === "audio/mpeg") {
+            if (file.type === "audio/mpeg" || file.type === "video/mp4") {
                 setSelectedFile(file);
             }
 
@@ -263,10 +272,10 @@ const NewPost = ({ feelings }) => {
                 buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
                 break;
             case "escultura":
-                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "7kb");
+                buildDropzone("image/jpeg, image/png, video/mp4", ".jpeg, .png e .mp4", "50mb");
                 break;
-            case "video":
-                buildDropzone("video/mp4", ".mp4", "100mb");
+            case "vídeo":
+                buildDropzone("video/mp4", ".mp4", "300mb");
                 break;
             case "música":
             case "áudio":
@@ -307,7 +316,7 @@ const NewPost = ({ feelings }) => {
                     <FormControl id="type">
                         <FormLabel>Tipo</FormLabel>
                         <Wrap {...group}>
-                            {type_options.map((value) => {
+                            {typeOptions.map((value) => {
                                 const radio = getRadioProps({ value })
                                 return (
                                     <WrapItem key={value}>

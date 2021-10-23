@@ -1,5 +1,5 @@
 import firebase from '../../../lib/firebase';
-import 'firebase/compat/storage';
+import 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import formidable from 'formidable'
 
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   var buffer = new Buffer.from(JSON.parse(data.fields.file).data);
 
-  var fileRef = storageRef.child(`${data.fields.category}/${uuidv4()}.${data.fields.extension}`);
+  var fileRef = storageRef.child(`${data.fields.folder}/${uuidv4()}.${data.fields.extension}`);
 
   var error = "";
 
