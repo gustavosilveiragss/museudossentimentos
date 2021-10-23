@@ -3,7 +3,16 @@ import Feed from "./components/feed"
 export async function getStaticProps() {
     var props = {};
 
-    props.feelings = new Array();
+    const typeOptions = [
+        "poesia",
+        "pintura",
+        "escultura",
+        "fotografia",
+        "vídeo",
+        "texto",
+        "música",
+        "áudio"
+    ];
 
     var res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/feelings/fetch`, {
         method: "GET"
@@ -17,6 +26,7 @@ export async function getStaticProps() {
 
     props.feelings = feelings.feelings;
     props.posts = posts.posts;
+    props.typeOptions = typeOptions;
 
     return { props: { props } };
 }

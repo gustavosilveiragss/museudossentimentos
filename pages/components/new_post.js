@@ -23,24 +23,13 @@ import bytes from "bytes";
 import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
 
-const NewPost = ({ feelings }) => {
+const NewPost = ({ feelings, typeOptions }) => {
     const {
         handleSubmit,
         register,
         setError,
         formState: { errors, isSubmitting }
     } = useForm();
-
-    const type_options = [
-        "poesia",
-        "pintura",
-        "escultura",
-        "fotografia",
-        "vídeo",
-        "texto",
-        "música",
-        "áudio"
-    ];
 
     // just dont question it
     var updatedType = "poesia";
@@ -327,7 +316,7 @@ const NewPost = ({ feelings }) => {
                     <FormControl id="type">
                         <FormLabel>Tipo</FormLabel>
                         <Wrap {...group}>
-                            {type_options.map((value) => {
+                            {typeOptions.map((value) => {
                                 const radio = getRadioProps({ value })
                                 return (
                                     <WrapItem key={value}>
