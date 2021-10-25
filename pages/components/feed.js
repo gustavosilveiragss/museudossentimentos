@@ -1,6 +1,21 @@
-import { Select } from '@chakra-ui/react';
 import React from 'react';
 import { CUIAutoComplete } from 'chakra-ui-autocomplete';
+import Image from 'next/image';
+import {
+    Box,
+    Center,
+    Heading,
+    Text,
+    Stack,
+    Avatar,
+    Select,
+    useColorModeValue,
+    Tag,
+    Grid,
+    Container,
+    Flex,
+    VStack,
+} from '@chakra-ui/react';
 
 const Feed = ({ posts, feelings, typeOptions }) => {
     posts = Object.keys(posts).map(key => posts[key]);
@@ -116,7 +131,84 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                 }
                 disableCreateItem={true}
             />
-            {filteredPosts.map(post => (
+            <VStack m={4}>
+                <Box
+                    maxW={'1080px'}
+                    w={'full'}
+                    bg={useColorModeValue('white', 'gray.900')}
+                    boxShadow={'2xl'}
+                    rounded={'md'}
+                    p={6}
+                    overflow={'hidden'}>
+
+                    <Box
+                        h={'480px'}
+                        bg={'gray.100'}
+                        mt={-6}
+                        mx={-6}
+                        mb={6}
+                        pos={'relative'}>
+
+                        <Image
+                            src={'https://i.imgur.com/e330bF5.jpeg'}
+                            layout={'fill'}
+                            objectFit={"contain"}
+                        />
+                    </Box>
+
+                    <Stack>
+                        <Text
+                            textTransform={'uppercase'}
+                            fontWeight={600}
+                            fontSize={'0.6em'}
+                            letterSpacing={1.1}>
+                            Fotografia</Text>
+
+                        <Flex>
+                            <Tag
+                                colorScheme={"green"}
+                                size={"sm"}
+                                mr="2">
+                                Amor
+                            </Tag>
+                            <Tag
+                                colorScheme={"green"}
+                                size={"sm"}
+                                mr="2">
+                                Afeto
+                            </Tag>
+                            <Tag
+                                colorScheme={"green"}
+                                size={"sm"}
+                                mr="2">
+                                Carinho
+                            </Tag>
+                            <Tag
+                                colorScheme={"green"}
+                                size={"sm"}>
+                                Saudade
+                            </Tag>
+                        </Flex>
+
+                        <Heading
+                            color={useColorModeValue('gray.700', 'white')}
+                            fontSize={'2xl'}
+                            fontFamily={'body'}>
+                            Título</Heading>
+
+                        <Text color={'gray.500'}>Descrição</Text>
+                    </Stack>
+
+                    <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+                        <Avatar src={'https://avatars0.githubusercontent.com/u/1164541?v=4'} />
+
+                        <Stack direction={'column'} spacing={0} fontSize={'sm'}>
+                            <Text fontWeight={600}>Nome do amiguinho</Text>
+                        </Stack>
+                    </Stack>
+                </Box>
+            </VStack>
+            {/*filteredPosts.map(post => (
                 <div key={post.id} style={{ margin: '30px' }}>
                     <div>{`título: ${post.title}`}</div>
                     <div>{`tipo: ${post.type}`}</div>
@@ -134,8 +226,8 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                         return title;
                     })}</div>
                 </div>
-            ))}
-        </div>
+                ))*/}
+        </div >
     );
 }
 
