@@ -1,4 +1,5 @@
 import Feed from "./components/feed"
+import NewPost from "./components/new_post"
 
 export async function getStaticProps() {
     var props = {};
@@ -33,6 +34,9 @@ export async function getStaticProps() {
 
 export default function Home({ props }) {
     return (
-        <Feed {...props}></Feed>
+        <div>
+            {/*<NewPost {...props}></NewPost>*/}
+            <Feed {...props}></Feed>
+        </div>
     );
 };

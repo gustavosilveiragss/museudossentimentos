@@ -16,10 +16,9 @@ import {
     Flex,
     VStack,
 } from '@chakra-ui/react';
+import ReactPlayer from 'react-player';
 
 const Feed = ({ posts, feelings, typeOptions }) => {
-    posts = Object.keys(posts).map(key => posts[key]);
-
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
 
     const feelingsArray = Object.keys(feelings).map(key => {
@@ -131,102 +130,121 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                 }
                 disableCreateItem={true}
             />
-            <VStack m={4}>
-                <Box
-                    maxW={'1080px'}
-                    w={'full'}
-                    bg={useColorModeValue('white', 'gray.900')}
-                    boxShadow={'2xl'}
-                    rounded={'md'}
-                    p={6}
-                    overflow={'hidden'}>
-
+            {filteredPosts.map(post => (
+                <VStack m={4}>
                     <Box
-                        h={'480px'}
-                        bg={'gray.100'}
-                        mt={-6}
-                        mx={-6}
-                        mb={6}
-                        pos={'relative'}>
+                        maxW={'1080px'}
+                        w={'full'}
+                        bg={useColorModeValue('white', 'gray.900')}
+                        boxShadow={'2xl'}
+                        rounded={'md'}
+                        p={6}
+                        overflow={'hidden'}>
 
-                        <Image
-                            src={'https://i.imgur.com/e330bF5.jpeg'}
-                            layout={'fill'}
-                            objectFit={"contain"}
-                        />
-                    </Box>
+                        {
+                            post.url ? (
+                                post.url.split('//').pop().split('/')[0] === "i.imgur.com" ? <Box
+                                    h={'480px'}
+                                    bg={'gray.100'}
+                                    mt={-6}
+                                    mx={-6}
+                                    mb={6}
+                                    pos={'relative'}>
 
-                    <Stack>
-                        <Text
-                            textTransform={'uppercase'}
-                            fontWeight={600}
-                            fontSize={'0.6em'}
-                            letterSpacing={1.1}>
-                            Fotografia</Text>
+                                    <Image
+                                        src={post.url}
+                                        layout={'fill'}
+                                        objectFit={"contain"}
+                                    />
+                                </Box>
+                                    :
+                                    <Box
+                                        minH={"200px"}
+                                        maxH={"720px"}
+                                        mt={-6}
+                                        mx={-6}
+                                        mb={6}
+                                        pos={'relative'}>
+                                        <Center
+                                            bg={'gray.100'}>
+                                            <ReactPlayer
+                                                url={post.url}
+                                                controls={true}
+                                            />
+                                        </Center>
+                                    </Box>
+                            )
+                                : <Box
+                                    minH={"200px"}
+                                    maxH={"600px"}
+                                    mt={-6}
+                                    mx={-6}
+                                    mb={6}
+                                    pos={'relative'}>
 
-                        <Flex>
-                            <Tag
-                                colorScheme={"green"}
-                                size={"sm"}
-                                mr="2">
-                                Amor
-                            </Tag>
-                            <Tag
-                                colorScheme={"green"}
-                                size={"sm"}
-                                mr="2">
-                                Afeto
-                            </Tag>
-                            <Tag
-                                colorScheme={"green"}
-                                size={"sm"}
-                                mr="2">
-                                Carinho
-                            </Tag>
-                            <Tag
-                                colorScheme={"green"}
-                                size={"sm"}>
-                                Saudade
-                            </Tag>
-                        </Flex>
+                                    <Center
+                                        margin="10px">
+                                        <Box>
+                                            <Text
+                                                fontSize={'1em'}
+                                                letterSpacing={1.1}>
+                                                {post.content}
+                                            </Text>
+                                        </Box>
+                                    </Center>
+                                </Box>
+                        }
 
-                        <Heading
-                            color={useColorModeValue('gray.700', 'white')}
-                            fontSize={'2xl'}
-                            fontFamily={'body'}>
-                            Título</Heading>
+                        <Stack>
+                            <Text
+                                textTransform={'uppercase'}
+                                fontWeight={600}
+                                fontSize={'0.6em'}
+                                letterSpacing={1.1}>
+                                {post.type}</Text>
 
-                        <Text color={'gray.500'}>Descrição</Text>
-                    </Stack>
+                            <Flex>
+                                {post.feelingsUids.map(feeling => {
+                                    var feelingsArray = Object.keys(feelings).map(key => feelings[key]);
 
-                    <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-                        <Avatar src={'https://avatars0.githubusercontent.com/u/1164541?v=4'} />
+                                    var title = feelingsArray.find(f => {
+                                        if (f.uid !== feeling) {
+                                            return;
+                                        }
 
-                        <Stack direction={'column'} spacing={0} fontSize={'sm'}>
-                            <Text fontWeight={600}>Nome do amiguinho</Text>
+                                        return f;
+                                    }).title;
+
+                                    return (
+                                        <Tag
+                                            colorScheme={"green"}
+                                            size={"sm"}
+                                            mr="2">
+                                            {title}
+                                        </Tag>
+                                    );
+                                })}
+                            </Flex>
+
+                            <Heading
+                                color={useColorModeValue('gray.700', 'white')}
+                                fontSize={'2xl'}
+                                fontFamily={'body'}>
+                                {post.title}</Heading>
+
+                            <Text color={'gray.500'}>{post.description}</Text>
                         </Stack>
-                    </Stack>
-                </Box>
-            </VStack>
-            {/*filteredPosts.map(post => (
-                <div key={post.id} style={{ margin: '30px' }}>
-                    <div>{`título: ${post.title}`}</div>
-                    <div>{`tipo: ${post.type}`}</div>
-                    <div>{"sentimentos: " + post.feelingsUids.map(feeling => {
-                        var feelingsArray = Object.keys(feelings).map(key => feelings[key]);
 
-                        var title = feelingsArray.find(f => {
-                            if (f.uid !== feeling) {
-                                return;
-                            }
+                        <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+                            <Avatar src={post.author.photoUrl} />
 
-                            return f;
-                        }).title;
-
-                        return title;
-                    })}</div>
-                </div>
-                ))*/}
+                            <Stack direction={'column'} spacing={0} fontSize={'sm'}>
+                                <Text fontWeight={600}>{post.author.name}</Text>
+                            </Stack>
+                        </Stack>
+                    </Box>
+                </VStack>
+            ))}
         </div >
     );
 }
