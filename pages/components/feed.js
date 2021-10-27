@@ -8,15 +8,14 @@ import {
     Text,
     Stack,
     Avatar,
-    Select,
     useColorModeValue,
     Tag,
-    Grid,
-    Container,
     Flex,
     VStack,
+    Spacer,
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player';
+import NavBar from './navbar';
 
 const Feed = ({ posts, feelings, typeOptions }) => {
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
@@ -110,26 +109,53 @@ const Feed = ({ posts, feelings, typeOptions }) => {
 
     return (
         <div>
-            <CUIAutoComplete
-                placeholder="Filtre por tipos"
-                items={pickerTypes}
-                selectedItems={selectedTypes}
-                hideToggleButton={true}
-                onSelectedItemsChange={(changes) =>
-                    typesChange(changes)
-                }
-                disableCreateItem={true}
-            />
-            <CUIAutoComplete
-                placeholder="Filtre por sentimentos"
-                items={pickerFeelings}
-                selectedItems={selectedFeelings}
-                hideToggleButton={true}
-                onSelectedItemsChange={(changes) =>
-                    feelingsChange(changes)
-                }
-                disableCreateItem={true}
-            />
+            <NavBar></NavBar>
+            <Center>
+                <Flex
+                    maxW="1080px"
+                    w="full"
+                    px="20px">
+                    <Stack
+                        direction="column-reverse">
+                        <Text
+                            textTransform={'uppercase'}
+                            fontWeight={600}
+                            fontSize={{ base: "2em", md: "2em", lg: "3em" }}
+                            mb={'10px'}
+                            mr="10px">
+                            Exibição
+                        </Text>
+                    </Stack>
+                    <Spacer />
+                    <Stack>
+                        <Box
+                            mb={-8}>
+                            <CUIAutoComplete
+                                placeholder="Filtre por tipos"
+                                items={pickerTypes}
+                                selectedItems={selectedTypes}
+                                hideToggleButton={true}
+                                onSelectedItemsChange={(changes) =>
+                                    typesChange(changes)
+                                }
+                                disableCreateItem={true}
+                            />
+                        </Box>
+                        <Box>
+                            <CUIAutoComplete
+                                placeholder="Filtre por sentimentos"
+                                items={pickerFeelings}
+                                selectedItems={selectedFeelings}
+                                hideToggleButton={true}
+                                onSelectedItemsChange={(changes) =>
+                                    feelingsChange(changes)
+                                }
+                                disableCreateItem={true}
+                            />
+                        </Box>
+                    </Stack>
+                </Flex>
+            </Center>
             {filteredPosts.map(post => (
                 <VStack m={4}>
                     <Box
