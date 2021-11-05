@@ -34,7 +34,7 @@ export default function NavBar() {
                                 textDecoration: 'none',
                                 bg: useColorModeValue('gray.200', 'gray.700'),
                             }}
-                            href={'#'}>
+                            href={'/'}>
                             <Text
                                 fontSize="md">
                                 exibição
@@ -43,7 +43,7 @@ export default function NavBar() {
 
                         {user ?
                             <Link
-                                href={"#"}
+                                href={"/new"}
                                 _hover={{
                                     textDecoration: 'none'
                                 }}>
@@ -58,7 +58,7 @@ export default function NavBar() {
                             </Link> : <Box></Box>}
 
                         {user ? <Link
-                            href={'#'}
+                            href={'/user/' + user.uid}
                             _hover={{
                                 textDecoration: 'none'
                             }}>

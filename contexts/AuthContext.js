@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
             const formatedUser = await formatUser(currentUser);
 
             setUser(formatedUser);
-            setSession(true);
+            setSession(JSON.stringify(formatedUser));
             
             await fetch("/api/users/" + formatedUser.uid, {
                 method: "POST",
