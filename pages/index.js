@@ -1,5 +1,5 @@
 import Feed from "./components/feed"
-import NewPost from "./components/new_post"
+import NavBar from "./components/navbar"
 
 export async function getStaticProps() {
     var props = {};
@@ -35,6 +35,7 @@ export async function getStaticProps() {
 export default function Home({ props }) {
     return (
         <div>
+            <NavBar></NavBar>
             {/*<NewPost {...props}></NewPost>*/}
             <Feed {...props}></Feed>
         </div>

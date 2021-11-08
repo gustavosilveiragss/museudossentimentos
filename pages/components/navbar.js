@@ -58,7 +58,7 @@ export default function NavBar() {
                             </Link> : <Box></Box>}
 
                         {user ? <Link
-                            href={'/user/' + user.uid}
+                            href={'/profile'}
                             _hover={{
                                 textDecoration: 'none'
                             }}>

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import {
   IconButton,
   Avatar,
@@ -19,42 +19,22 @@ import {
 } from '@chakra-ui/react';
 import {
   FiMenu,
-  FiBell,
   FiLogOut,
   FiSend
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
-import useAuth from '../hooks/useAuth';
-import Router from 'next/router'
-import firebase from '../lib/firebase';
+import Feed from './components/feed';
 
-export default function SidebarWithHeader({
+function Profile({
   children,
+  user,
+  props,
 }: {
-  children: ReactNode;
+  children: ReactNode,
+  user: any,
+  props: any
 }) {
-  const [loaded, setLoaded] = useState(false);
-
-  const { user } = useAuth();
-
-  console.log(firebase.auth().currentUser);
-
-  useEffect(() => {
-
-    /*if (!user) {
-      Router.push('/');
-    }
-
-    else {
-      setLoaded(true);
-    }*/
-  }, []);
-
-  if (!loaded) {
-    return <div></div>;
-  }
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -75,14 +55,61 @@ export default function SidebarWithHeader({
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} user={user} />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
+        <Feed {...props}></Feed>
       </Box>
     </Box>
   );
 }
+
+Profile.getInitialProps = async (ctx) => {
+  var cookie = ctx.req.headers.cookie;
+
+  cookie = cookie.replace('auth=', '');
+
+  var userRes = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/users/${cookie}`, {
+    method: "GET"
+  });
+  var user = (await userRes.json()).user;
+
+  var postsRes = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/author/${cookie}?`
+    + new URLSearchParams({
+      author: user
+    }), {
+    method: "GET"
+  });
+  user.posts = (await postsRes.json()).posts;
+
+  var res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/feelings/fetch`, {
+    method: "GET"
+  });
+  const feelings = await res.json();
+
+  var props = {
+    feelings: feelings.feelings,
+    posts: user.posts,
+    typeOptions: [
+      "poesia",
+      "pintura",
+      "escultura",
+      "fotografia",
+      "vídeo",
+      "texto",
+      "música",
+      "áudio"
+    ]
+  };
+
+  console.log( user.posts)
+
+  return {
+    user: user,
+    props: props,
+  };
+}
+
+export default Profile;
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -145,8 +172,9 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
+  user: any;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = ({ onOpen, user, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -174,29 +202,18 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
         <Flex alignItems={'center'}>
           <HStack>
             <Avatar
               size={'sm'}
-              src={
-                'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-              }
+              src={user.photoUrl}
             />
             <VStack
               display={{ base: 'none', md: 'flex' }}
               alignItems="flex-start"
               spacing="1px"
               ml="2">
-              <Text fontSize="sm">Justina Clark</Text>
-              <Text fontSize="xs" color="gray.600">
-                Admin
-              </Text>
+              <Text fontSize="sm">{user.name}</Text>
             </VStack>
           </HStack>
         </Flex>

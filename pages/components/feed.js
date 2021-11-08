@@ -13,9 +13,9 @@ import {
     Flex,
     VStack,
     Spacer,
+    Link,
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player';
-import NavBar from './navbar';
 
 const Feed = ({ posts, feelings, typeOptions }) => {
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
@@ -109,7 +109,6 @@ const Feed = ({ posts, feelings, typeOptions }) => {
 
     return (
         <div>
-            <NavBar></NavBar>
             <Center>
                 <Flex
                     maxW="1080px"
@@ -261,13 +260,19 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                             <Text color={'gray.500'}>{post.description}</Text>
                         </Stack>
 
-                        <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-                            <Avatar src={post.author.photoUrl} />
+                        <Link
+                            href={'/user/' + post.author.uid}
+                            _hover={{
+                                textDecoration: 'none'
+                            }}>
+                            <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+                                <Avatar src={post.author.photoUrl} />
 
-                            <Stack direction={'column'} spacing={0} fontSize={'sm'}>
-                                <Text fontWeight={600}>{post.author.name}</Text>
+                                <Stack direction={'column'} spacing={0} fontSize={'sm'}>
+                                    <Text fontWeight={600}>{post.author.name}</Text>
+                                </Stack>
                             </Stack>
-                        </Stack>
+                        </Link>
                     </Box>
                 </VStack>
             ))}
