@@ -31,12 +31,14 @@ export default async function handler(req, res) {
 
     var posts = snapshot.val();
 
-    console.log(req.query.author)
+    var { user } = req.query;
+
+    user = JSON.parse(user);
 
     posts = Object.keys(posts).map(key => posts[key]);
 
     for (let i = 0; i < posts.length; i++) {
-        posts[i].author = req.query.author;
+        posts[i].author = user;
     }
 
     res.status(200).json({ success: true, posts: posts });

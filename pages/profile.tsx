@@ -25,6 +25,7 @@ import {
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 import Feed from './components/feed';
+import useAuth from '../hooks/useAuth';
 
 function Profile({
   children,
@@ -75,7 +76,7 @@ Profile.getInitialProps = async (ctx) => {
 
   var postsRes = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/author/${cookie}?`
     + new URLSearchParams({
-      author: user
+      user: JSON.stringify(user)
     }), {
     method: "GET"
   });
@@ -98,10 +99,9 @@ Profile.getInitialProps = async (ctx) => {
       "texto",
       "música",
       "áudio"
-    ]
+    ],
+    userProfile: true
   };
-
-  console.log( user.posts)
 
   return {
     user: user,
@@ -116,6 +116,8 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { signout } = useAuth();
+
   return (
     <Box
       transition="3s ease"
@@ -132,10 +134,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      <NavItem key="Suas publicações" icon={FiSend}>
+      <NavItem key="Suas publicações" icon={FiSend} onclick="">
         Suas publicações
       </NavItem>
-      <NavItem key="Sair" icon={FiLogOut}>
+      <NavItem key="Sair" icon={FiLogOut} onclick={signout}>
         Sair
       </NavItem>
     </Box>
@@ -145,18 +147,19 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
+  onclick: any;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+
+const NavItem = ({ icon, children, onclick}: NavItemProps) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }}>
+    <Link href="#" onClick={onclick} style={{ textDecoration: 'none' }}>
       <Flex
         align="center"
         p="4"
         mx="4"
         borderRadius="lg"
         role="group"
-        cursor="pointer"
-        {...rest}>
+        cursor="pointer">
         {icon && (
           <Icon
             mr="4"

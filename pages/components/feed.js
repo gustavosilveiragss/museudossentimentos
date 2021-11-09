@@ -14,10 +14,11 @@ import {
     VStack,
     Spacer,
     Link,
+    HStack,
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player';
 
-const Feed = ({ posts, feelings, typeOptions }) => {
+const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
 
     const feelingsArray = Object.keys(feelings).map(key => {
@@ -105,7 +106,7 @@ const Feed = ({ posts, feelings, typeOptions }) => {
         }
 
         setFilteredPosts(final);
-    }
+    };
 
     return (
         <div>
@@ -116,14 +117,22 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                     px="20px">
                     <Stack
                         direction="column-reverse">
-                        <Text
-                            textTransform={'uppercase'}
-                            fontWeight={600}
-                            fontSize={{ base: "2em", md: "2em", lg: "3em" }}
-                            mb={'10px'}
-                            mr="10px">
-                            Exibição
-                        </Text>
+                        <HStack>
+                            {userProfile ?
+                                <Avatar
+                                    mb="10px"
+                                    src={posts[0].author.photoUrl}
+                                />
+                                : <div></div>}
+                            <Text
+                                textTransform={'uppercase'}
+                                fontWeight={600}
+                                fontSize={{ base: "1em", md: "2em", lg: "3em" }}
+                                mb={'10px'}
+                                mr="10px">
+                                {userProfile ? posts[0].author.name : "Exibição"}
+                            </Text>
+                        </HStack>
                     </Stack>
                     <Spacer />
                     <Stack>
@@ -260,7 +269,7 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                             <Text color={'gray.500'}>{post.description}</Text>
                         </Stack>
 
-                        <Link
+                        {userProfile ? <div></div> : <Link
                             href={'/user/' + post.author.uid}
                             _hover={{
                                 textDecoration: 'none'
@@ -272,10 +281,11 @@ const Feed = ({ posts, feelings, typeOptions }) => {
                                     <Text fontWeight={600}>{post.author.name}</Text>
                                 </Stack>
                             </Stack>
-                        </Link>
+                        </Link>}
                     </Box>
                 </VStack>
-            ))}
+            ))
+            }
         </div >
     );
 }
