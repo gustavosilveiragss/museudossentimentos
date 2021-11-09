@@ -165,11 +165,11 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                 </Flex>
             </Center>
             {filteredPosts.map(post => (
-                <VStack m={4}>
+                <VStack m={4} key={post.uid}>
                     <Box
                         maxW={'1080px'}
                         w={'full'}
-                        bg={useColorModeValue('white', 'gray.900')}
+                        bg={'white'}
                         boxShadow={'2xl'}
                         rounded={'md'}
                         p={6}
@@ -253,7 +253,8 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                         <Tag
                                             colorScheme={"green"}
                                             size={"sm"}
-                                            mr="2">
+                                            mr="2"
+                                            key={title}>
                                             {title}
                                         </Tag>
                                     );
@@ -261,7 +262,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                             </Flex>
 
                             <Heading
-                                color={useColorModeValue('gray.700', 'white')}
+                                color={'gray.700'}
                                 fontSize={'2xl'}
                                 fontFamily={'body'}>
                                 {post.title}</Heading>
