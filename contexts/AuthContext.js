@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
             const formatedUser = await formatUser(currentUser);
 
             setUser(formatedUser);
-            setSession(true);
+            setSession(formatedUser.uid);
             
             await fetch("/api/users/" + formatedUser.uid, {
                 method: "POST",
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
                 },
                 body: JSON.stringify(formatedUser)
             }).then(res => {
-                //console.log(res.json());
+                console.log(res.json());
             });
 
             return formatedUser.email;
@@ -76,7 +76,7 @@ export function AuthProvider({ children }) {
             }
             handleUser(response.user);
 
-            Router.push('/dashboard');
+            Router.push('/');
         } finally {
             setLoading(false);
         }
@@ -105,7 +105,7 @@ export function AuthProvider({ children }) {
 
             handleUser(response.user);
 
-            Router.push('/dashboard');
+            Router.push('/');
         } finally {
             setLoading(false);
         }

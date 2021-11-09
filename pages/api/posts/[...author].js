@@ -8,8 +8,19 @@ export default async function handler(req, res) {
         return;
     }
 
-    const dbRef = firebase.database().ref().child("posts");
-    
+    const { author } = req.query;
+
+    if (author[0] !== "author") {
+        res.status(400).json({ success: false, error: "use /author to filter posts by author" });
+
+        return;
+    }
+
+    const dbRef = firebase.database().ref()
+        .child("posts")
+        .orderByChild("authorUid")
+        .equalTo(author[1]);
+
     var snapshot = await dbRef.get();
 
     if (!snapshot.exists()) {
@@ -20,15 +31,14 @@ export default async function handler(req, res) {
 
     var posts = snapshot.val();
 
+    var { user } = req.query;
+
+    user = JSON.parse(user);
+
     posts = Object.keys(posts).map(key => posts[key]);
 
     for (let i = 0; i < posts.length; i++) {
-        var userRes = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/users/${posts[i].authorUid}`, {
-            method: "GET"
-        });
-        var jsonRes = await userRes.json();
-
-        posts[i].author = jsonRes.user;
+        posts[i].author = user;
     }
 
     res.status(200).json({ success: true, posts: posts });
