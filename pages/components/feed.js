@@ -21,14 +21,26 @@ import ReactPlayer from 'react-player';
 const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
 
-    const feelingsArray = Object.keys(feelings).map(key => {
-        var final = {
-            label: feelings[key].title,
-            value: feelings[key].uid,
-        };
+    var feelingsArray = [];
 
-        return final;
-    });
+    if (feelings) {
+        feelingsArray = Object.keys(feelings).map(key => {
+            var final = {
+                label: feelings[key].title,
+                value: feelings[key].uid,
+            };
+    
+            return final;
+        });
+    }
+
+    // esses lixo de if são só pra ver se ta fazendo o pre render da build, qualquer coisa seta tudo so pra nao dar erro
+    if (!typeOptions) {
+        posts = [];
+        feelings = [];
+        typeOptions = [];
+        userProfile = false;
+    }
 
     var typeOptionsArray = new Array();
     typeOptions.forEach(type => {
@@ -164,7 +176,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                     </Stack>
                 </Flex>
             </Center>
-            {filteredPosts.map(post => (
+            {posts && posts.length > 0 ? filteredPosts.map(post => (
                 <VStack m={4} key={post.uid}>
                     <Box
                         maxW={'1080px'}
@@ -285,8 +297,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                         </Link>}
                     </Box>
                 </VStack>
-            ))
-            }
+            )) : <div></div>}
         </div >
     );
 }

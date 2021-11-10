@@ -39,14 +39,22 @@ const NewPost = ({ feelings, typeOptions }) => {
 
     const { user } = useAuth();
 
-    var feelingsArray = Object.keys(feelings).map(key => {
-        var final = {
-            label: feelings[key].title,
-            value: feelings[key].uid,
-        };
+    var feelingsArray = [];
 
-        return final;
-    });
+    if (feelings) {
+        feelingsArray = Object.keys(feelings).map(key => {
+            var final = {
+                label: feelings[key].title,
+                value: feelings[key].uid,
+            };
+    
+            return final;
+        });
+    }
+
+    if (!typeOptions) {
+        typeOptions = [];
+    }
 
     const [pickerFeelings, setPickerFeelings] = React.useState(feelingsArray);
     const [selectedFeelings, setSelectedFeelings] = React.useState(new Array());
