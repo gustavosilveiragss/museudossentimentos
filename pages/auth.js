@@ -29,7 +29,6 @@ const Auth = () => {
   function handleAuth(method) {
     switch (method) {
       case "google":
-        console.log("google")
         signinGoogle().then(response => {
           if (typeof response === "undefined" || response?.message === null) {
             return;
@@ -40,7 +39,6 @@ const Auth = () => {
 
         break;
       case "github":
-        console.log("github")
         signinGithub().then(response => {
           if (typeof response === "undefined" || response?.message === null) {
             return;
