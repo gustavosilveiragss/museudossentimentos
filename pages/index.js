@@ -5,7 +5,7 @@ const Feed = dynamic(() => import('./components/feed'), {
   ssr: false
 })
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     var props = {};
 
     const typeOptions = [
