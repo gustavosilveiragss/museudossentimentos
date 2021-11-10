@@ -4,7 +4,7 @@ const NewPost = dynamic(() => import('./components/new_post'), {
   ssr: false
 })
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     var props = {};
 
     const typeOptions = [
