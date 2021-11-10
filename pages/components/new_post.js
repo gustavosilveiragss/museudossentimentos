@@ -220,6 +220,8 @@ const NewPost = ({ feelings, typeOptions }) => {
         data.append("type", values.selectedFile.type);
         data.append("extension", extension);
 
+        console.log(data)
+
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
             method: "POST",
             body: data
@@ -227,6 +229,8 @@ const NewPost = ({ feelings, typeOptions }) => {
             values.url = data.url;
             values.selectedFile = null;
         });
+
+        console.log(values)
 
         return values;
     };
