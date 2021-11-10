@@ -239,15 +239,13 @@ const NewPost = ({ feelings, typeOptions }) => {
 
         const storageRef = firebase.storage().ref();
 
-        var buffer = buf.data;
-
         var fileRef = storageRef.child(`${type}/${uuidv4()}.${extension}`);
 
         // sim, eu poderia pegar a url ali no ref, mas preferi ir pelo try catch só pq sim
         var fileUrl = "";
 
         try {
-            var snapshot = await fileRef.put(buffer, {
+            var snapshot = await fileRef.put(buf, {
                 contentType: type
             });
 
