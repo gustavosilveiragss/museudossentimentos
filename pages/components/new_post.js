@@ -20,6 +20,10 @@ import { CUIAutoComplete } from 'chakra-ui-autocomplete';
 import Dropzone from 'react-dropzone';
 import bytes from "bytes";
 
+import firebase from '../../lib/firebase';
+import 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
+
 import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
 
@@ -47,7 +51,7 @@ const NewPost = ({ feelings, typeOptions }) => {
                 label: feelings[key].title,
                 value: feelings[key].uid,
             };
-    
+
             return final;
         });
     }
@@ -171,7 +175,7 @@ const NewPost = ({ feelings, typeOptions }) => {
 
                     break;
                 }
-                
+
                 values = await handleStorageUpload(values);
 
                 break;
@@ -225,15 +229,35 @@ const NewPost = ({ feelings, typeOptions }) => {
         console.log("type:", values.selectedFile.type)
         console.log("extension:", extension)
 
-        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
+        /*await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
             method: "POST",
             body: data
         }).then(res => res.json()).then(data => {
             values.url = data.url;
             values.selectedFile = null;
-        });
+        });*/
 
-        console.log(values)
+        const storageRef = firebase.storage().ref();
+
+        var buffer = buf.data;
+
+        var fileRef = storageRef.child(`${type}/${uuidv4()}.${extension}`);
+
+        // sim, eu poderia pegar a url ali no ref, mas preferi ir pelo try catch só pq sim
+        var fileUrl = "";
+
+        try {
+            var snapshot = await fileRef.put(buffer, {
+                contentType: type
+            });
+
+            fileUrl = await snapshot.ref.getDownloadURL();
+        } catch (err) {
+            console.log(err);
+        }
+
+        values.selectedFile = null;
+        values.url = fileUrl;
 
         return values;
     };
