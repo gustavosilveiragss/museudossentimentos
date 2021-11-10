@@ -1,4 +1,8 @@
-import NewPost from "./components/new_post"
+import dynamic from 'next/dynamic'
+
+const NewPost = dynamic(() => import('./components/new_post'), {
+  ssr: false
+})
 
 export async function getStaticProps() {
     var props = {};

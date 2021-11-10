@@ -1,5 +1,9 @@
-import Feed from "./components/feed"
 import NavBar from "./components/navbar"
+import dynamic from 'next/dynamic'
+
+const Feed = dynamic(() => import('./components/feed'), {
+  ssr: false
+})
 
 export async function getStaticProps() {
     var props = {};
