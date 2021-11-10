@@ -220,7 +220,10 @@ const NewPost = ({ feelings, typeOptions }) => {
         data.append("type", values.selectedFile.type);
         data.append("extension", extension);
 
-        console.log(data)
+        console.log("folder:", type)
+        console.log("file:", JSON.stringify(buf).substring(0, 20))
+        console.log("type:", values.selectedFile.type)
+        console.log("extension:", extension)
 
         await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
             method: "POST",
