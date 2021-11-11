@@ -96,14 +96,9 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
         for (const post of posts) {
             // check if post matches feelings
 
-            var filteredFeelings = post.feelingsUids.filter(f => feelingsUids.includes(f));
-
-            if (!filteredFeelings.length) {
-                // no feeling matches, remove post from final
-
-                // array = every element but that one
+            if(!feelingsUids.includes(post.feelingUid)) {
                 final = final.filter(p => p.uid !== post.uid);
-
+                
                 continue;
             }
 
@@ -308,7 +303,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
             )) : <VStack>
                 <Center>
                     <Text>
-                        Ainda não temos nenhuma arte
+                        Ainda não temos nenhuma arte assim
                     </Text>
                 </Center>
                 <Text>Mas a sua pode ser a primeira!
