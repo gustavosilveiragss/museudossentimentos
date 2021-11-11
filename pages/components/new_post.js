@@ -12,7 +12,8 @@ import {
     FormLabel,
     Wrap,
     WrapItem,
-    Input
+    Input,
+    Tag
 } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from "react-hook-form";
@@ -70,7 +71,11 @@ const NewPost = ({ feelings, typeOptions }) => {
 
     const handleSelectedItemsChange = (changes) => {
         if (changes) {
-            setSelectedFeelings(changes.selectedItems)
+            if (changes.selectedItems.length > 1) {
+                changes.selectedItems.shift();
+            }
+
+            setSelectedFeelings(changes.selectedItems);
         };
     };
 
@@ -150,12 +155,12 @@ const NewPost = ({ feelings, typeOptions }) => {
     }
 
     const handleSend = async (values) => {
-        values.feelingsUids = [];
+        values.feelingsUids = "";
 
         for (let i = 0; i < selectedFeelings.length; i++) {
             const f = selectedFeelings[i];
 
-            values.feelingsUids.push(f.value);
+            values.feelingUid = f.value;
         }
 
         values.type = type;

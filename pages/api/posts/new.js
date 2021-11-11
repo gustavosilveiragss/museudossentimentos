@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         uid: uuidv4(),
         url: req.body.url || "",
         content: req.body.content || "",
-        feelingsUids: req.body.feelingsUids,
+        feelingUid: req.body.feelingUid,
         type: req.body.type,
         description: req.body.description,
         title: req.body.title,

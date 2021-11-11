@@ -24,14 +24,22 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
     var feelingsArray = [];
 
     if (feelings) {
-        feelingsArray = Object.keys(feelings).map(key => {
-            var final = {
-                label: feelings[key].title,
-                value: feelings[key].uid,
-            };
+        for (const p of posts) {
+            feelingsArray = Object.keys(feelings).map(key => {
+                const f = feelings[key];
 
-            return final;
-        });
+                var final = {
+                    label: f.title,
+                    value: f.uid
+                };
+
+                if (p.feelingUid === f.uid) {
+                    p.feeling = f;
+                }
+
+                return final;
+            });
+        }
     }
 
     // esses lixo de if são só pra ver se ta fazendo o pre render da build, qualquer coisa seta tudo so pra nao dar erro
@@ -250,27 +258,15 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                 {post.type}</Text>
 
                             <Flex>
-                                {post.feelingsUids.map(feeling => {
-                                    var feelingsArray = Object.keys(feelings).map(key => feelings[key]);
-
-                                    var title = feelingsArray.find(f => {
-                                        if (f.uid !== feeling) {
-                                            return;
-                                        }
-
-                                        return f;
-                                    }).title;
-
-                                    return (
-                                        <Tag
-                                            colorScheme={"green"}
-                                            size={"sm"}
-                                            mr="2"
-                                            key={title}>
-                                            {title}
-                                        </Tag>
-                                    );
-                                })}
+                                {
+                                    <Tag
+                                        colorScheme={"green"}
+                                        size={"sm"}
+                                        mr="2"
+                                        key={post.feeling.title}>
+                                        {post.feeling.title}
+                                    </Tag>
+                                }
                             </Flex>
 
                             <Heading
@@ -295,6 +291,18 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                 </Stack>
                             </Stack>
                         </Link>}
+
+                        <Stack mt={6} direction={'row'} spacing={0}>
+                            <Text fontSize={14}>
+                                {post.feeling.message + '\u00A0'}
+                            </Text>
+                            <Link
+                                href={post.feeling.url}>
+                                <Text fontSize={14} color={"green.600"}>
+                                    {post.feeling.ref}
+                                </Text>
+                            </Link>
+                        </Stack>
                     </Box>
                 </VStack>
             )) : <VStack>

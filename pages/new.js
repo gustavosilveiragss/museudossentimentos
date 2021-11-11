@@ -23,13 +23,7 @@ export async function getServerSideProps() {
     });
     const feelings = await res.json();
 
-    res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/fetch`, {
-        method: "GET"
-    });
-    const posts = await res.json();
-
     props.feelings = feelings.feelings;
-    props.posts = posts.posts;
     props.typeOptions = typeOptions;
 
     return { props: { props } };
