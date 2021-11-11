@@ -20,7 +20,9 @@ import { CUIAutoComplete } from 'chakra-ui-autocomplete';
 import Dropzone from 'react-dropzone';
 import bytes from "bytes";
 
-import firebase from '../../lib/firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/auth';
+import 'firebase/database';
 import 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -216,28 +218,9 @@ const NewPost = ({ feelings, typeOptions }) => {
     const handleStorageUpload = async values => {
         const extension = values.selectedFile.name.slice((values.selectedFile.name.lastIndexOf(".") - 1 >>> 0) + 2);
 
-        var buf = new Buffer.from(await values.selectedFile.arrayBuffer());
-
-        var data = new FormData();
-        data.append("folder", type);
-        data.append("file", JSON.stringify(buf));
-        data.append("type", values.selectedFile.type);
-        data.append("extension", extension);
-
-        console.log("folder:", type)
-        console.log("file:", JSON.stringify(buf).substring(0, 20))
-        console.log("type:", values.selectedFile.type)
-        console.log("extension:", extension)
-
-        /*await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/new`, {
-            method: "POST",
-            body: data
-        }).then(res => res.json()).then(data => {
-            values.url = data.url;
-            values.selectedFile = null;
-        });*/
-
         const storageRef = firebase.storage().ref();
+
+        console.log("await values.selectedFile.");
 
         var fileRef = storageRef.child(`${type}/${uuidv4()}.${extension}`);
 
@@ -245,7 +228,7 @@ const NewPost = ({ feelings, typeOptions }) => {
         var fileUrl = "";
 
         try {
-            var snapshot = await fileRef.put(buf, {
+            var snapshot = await fileRef.put(await values.selectedFile.arrayBuffer(), {
                 contentType: type
             });
 
