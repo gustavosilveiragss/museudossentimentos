@@ -29,7 +29,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                 label: feelings[key].title,
                 value: feelings[key].uid,
             };
-    
+
             return final;
         });
     }
@@ -133,7 +133,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                             {userProfile ?
                                 <Avatar
                                     mb="10px"
-                                    src={posts[0].author.photoUrl}
+                                    src={userProfile.photoUrl}
                                 />
                                 : <div></div>}
                             <Text
@@ -142,7 +142,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                 fontSize={{ base: "1em", md: "2em", lg: "3em" }}
                                 mb={'10px'}
                                 mr="10px">
-                                {userProfile ? posts[0].author.name : "Exibição"}
+                                {userProfile ? userProfile.name : "Exibição"}
                             </Text>
                         </HStack>
                     </Stack>
@@ -176,7 +176,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                     </Stack>
                 </Flex>
             </Center>
-            {posts && posts.length > 0 ? filteredPosts.map(post => (
+            {posts && posts.length > 0 ? filteredPosts && filteredPosts.length > 0 ? filteredPosts.map(post => (
                 <VStack m={4} key={post.uid}>
                     <Box
                         maxW={'1080px'}
@@ -297,7 +297,21 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                         </Link>}
                     </Box>
                 </VStack>
-            )) : <div></div>}
+            )) : <VStack>
+                <Center>
+                    <Text>
+                        Ainda não temos nenhuma arte
+                    </Text>
+                </Center>
+                <Text>Mas a sua pode ser a primeira!
+                </Text>
+            </VStack> : <VStack>
+                <Center>
+                    <Text>
+                        {userProfile ? "Esse usuário ainda não publicou nada" : "Ainda não temos nenhuma arte"}
+                    </Text>
+                </Center>
+            </VStack>}
         </div >
     );
 }

@@ -100,7 +100,7 @@ Profile.getInitialProps = async (ctx) => {
       "música",
       "áudio"
     ],
-    userProfile: true
+    userProfile: user
   };
 
   return {

@@ -39,7 +39,7 @@ AuthorProfile.getInitialProps = async ({ query }) => {
       "música",
       "áudio"
     ],
-    userProfile: true,
+    userProfile: user,
     author: user
   };
 
