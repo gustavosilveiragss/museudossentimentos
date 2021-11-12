@@ -23,7 +23,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
 
     var feelingsArray = [];
 
-    if (feelings) {
+    if (posts) {
         for (const p of posts) {
             feelingsArray = Object.keys(feelings).map(key => {
                 const f = feelings[key];
