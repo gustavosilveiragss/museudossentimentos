@@ -16,6 +16,8 @@ import {
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from "react-icons/bs";
 
+import NavBar from "./components/navbar"
+
 const Auth = () => {
   const {
     user,
@@ -52,57 +54,60 @@ const Auth = () => {
   }
 
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Entre com sua conta</Heading>
+    <div>
+      <NavBar></NavBar>
+      <Flex
+        minH={'100vh'}
+        align={'center'}
+        justify={'center'}>
+        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+          <Stack align={'center'}>
+            <Heading fontSize={'4xl'}>Entre com sua conta</Heading>
 
-          <Text fontSize={'lg'} color={'gray.600'}>
-            para poder publicar sua própria arte!
+            <Text fontSize={'lg'} color={'gray.600'}>
+              para poder publicar sua própria arte!
           </Text>
-        </Stack>
-
-        <Box
-          rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
-          p={8}>
-          <Stack spacing={4}>
-            <Button
-              w={'full'}
-              maxW={'md'}
-              variant={'outline'}
-              leftIcon={<FcGoogle />}
-              onClick={() => handleAuth("google")}>
-              <Center>
-                <Text>Entrar com conta do Google</Text>
-              </Center>
-            </Button>
-
-            <Button
-              w={'full'}
-              maxW={'md'}
-              backgroundColor="gray.800"
-              onClick={() => handleAuth("github")}>
-              <Center>
-                <HStack>
-                  <Icon as={BsGithub} color="white"></Icon>
-
-                  <Text
-                    color="white">
-                    Entrar com conta do Github
-                  </Text>
-                </HStack>
-              </Center>
-            </Button>
-            <p>{errorMessage}</p>
           </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+
+          <Box
+            rounded={'lg'}
+            bg={useColorModeValue('white', 'gray.700')}
+            boxShadow={'lg'}
+            p={8}>
+            <Stack spacing={4}>
+              <Button
+                w={'full'}
+                maxW={'md'}
+                variant={'outline'}
+                leftIcon={<FcGoogle />}
+                onClick={() => handleAuth("google")}>
+                <Center>
+                  <Text>Entrar com conta do Google</Text>
+                </Center>
+              </Button>
+
+              <Button
+                w={'full'}
+                maxW={'md'}
+                backgroundColor="gray.800"
+                onClick={() => handleAuth("github")}>
+                <Center>
+                  <HStack>
+                    <Icon as={BsGithub} color="white"></Icon>
+
+                    <Text
+                      color="white">
+                      Entrar com conta do Github
+                  </Text>
+                  </HStack>
+                </Center>
+              </Button>
+              <p>{errorMessage}</p>
+            </Stack>
+          </Box>
+        </Stack>
+      </Flex>
+    </div>
   );
 }
 

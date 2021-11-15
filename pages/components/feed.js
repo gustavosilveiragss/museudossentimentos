@@ -8,7 +8,6 @@ import {
     Text,
     Stack,
     Avatar,
-    useColorModeValue,
     Tag,
     Flex,
     VStack,
@@ -236,7 +235,8 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                         <Box>
                                             <Text
                                                 fontSize={'1em'}
-                                                letterSpacing={1.1}>
+                                                letterSpacing={1.1}
+                                                whiteSpace="pre-line">
                                                 {post.content}
                                             </Text>
                                         </Box>
@@ -270,7 +270,7 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                 fontFamily={'body'}>
                                 {post.title}</Heading>
 
-                            <Text color={'gray.500'}>{post.description}</Text>
+                            <Text color={'gray.500'} whiteSpace="pre-line">{post.description}</Text>
                         </Stack>
 
                         {userProfile ? <div></div> : <Link

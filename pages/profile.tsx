@@ -23,9 +23,11 @@ import {
   FiSend
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
+import { RiGalleryLine } from "react-icons/ri";
 import { ReactText } from 'react';
 import Feed from './components/feed';
 import useAuth from '../hooks/useAuth';
+import Router from 'next/router';
 
 function Profile({
   children,
@@ -134,10 +136,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      <NavItem key="Suas publicações" icon={FiSend} onclick="">
-        Suas publicações
+      <NavItem key="Exibição" icon={RiGalleryLine} onclick={() => Router.push('/')}>
+        Exibição
       </NavItem>
-      <NavItem key="Sair" icon={FiLogOut} onclick={signout}>
+      <NavItem key="Sair" icon={FiLogOut} onclick={signout}>  
         Sair
       </NavItem>
     </Box>

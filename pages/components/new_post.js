@@ -29,6 +29,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import RadioCard from "./radio_card";
 import useAuth from "../../hooks/useAuth";
+import NavBar from "./navbar"
+import Router from 'next/router';
 
 const NewPost = ({ feelings, typeOptions }) => {
     const {
@@ -117,7 +119,7 @@ const NewPost = ({ feelings, typeOptions }) => {
                 break;
             case "música":
             case "áudio":
-                buildDropzone("audio/mpeg", ".mp1, .mp2 e .mp3", "50mb");
+                buildDropzone("audio/mpeg, video/mp4", ".mp1, .mp2, .mp3 e .mp4", "50mb");
                 break;
         }
     };
@@ -203,6 +205,8 @@ const NewPost = ({ feelings, typeOptions }) => {
             },
             body: JSON.stringify(values)
         });
+
+        Router.push("/");
     };
 
     const handleImgurUpload = async values => {
@@ -304,136 +308,139 @@ const NewPost = ({ feelings, typeOptions }) => {
                 break;
             case "música":
             case "áudio":
-                buildDropzone("audio/mpeg", ".mp1, .mp2 e .mp3", "50mb");
+                buildDropzone("audio/mpeg, video/mp4", ".mp1, .mp2, .mp3 e .mp4", "50mb");
                 break;
         }
     }
 
     return (
-        <Flex
-            minH={'80h'}
-            align={'top'}
-            justify={'center'}>
+        <div>
+            <NavBar></NavBar>
+            <Flex
+                minH={'80h'}
+                align={'top'}
+                justify={'center'}>
 
-            <Stack
-                spacing={4}
-                w={'full'}
-                maxW={'lg'}
-                bg={useColorModeValue('white', 'gray.700')}
-                rounded={'xl'}
-                boxShadow={'xs'}
-                p={6}
-                m={3}
-                my={12}>
+                <Stack
+                    spacing={4}
+                    w={'full'}
+                    maxW={'lg'}
+                    bg={useColorModeValue('white', 'gray.700')}
+                    rounded={'xl'}
+                    boxShadow={'xs'}
+                    p={6}
+                    m={3}
+                    my={12}>
 
-                <Heading lineHeight={1.1} fontSize={{ md: 'xl' }}>
-                    Nova arte
+                    <Heading lineHeight={1.1} fontSize={{ md: 'xl' }}>
+                        Nova arte
                 </Heading>
 
-                <Text
-                    fontSize={{ base: 'sm', sm: 'md' }}
-                    color={useColorModeValue('gray.800', 'gray.400')}>
-                    Publique seus sentimentos no museu
+                    <Text
+                        fontSize={{ base: 'sm', sm: 'md' }}
+                        color={useColorModeValue('gray.800', 'gray.400')}>
+                        Publique seus sentimentos no museu
                 </Text>
 
-                <form onSubmit={handleSubmit(handleSend)}>
+                    <form onSubmit={handleSubmit(handleSend)}>
 
-                    <FormControl id="type">
-                        <FormLabel>Tipo</FormLabel>
-                        <Wrap {...group}>
-                            {typeOptions.map((value) => {
-                                const radio = getRadioProps({ value })
-                                return (
-                                    <WrapItem key={value}>
-                                        <RadioCard
-                                            key={value}
-                                            {...radio}
-                                            onChange={(e) => handleTypeRadio(e)}>
-                                            {value}
-                                        </RadioCard>
-                                    </WrapItem>
-                                );
-                            })}
-                        </Wrap>
-                    </FormControl>
+                        <FormControl id="type">
+                            <FormLabel>Tipo</FormLabel>
+                            <Wrap {...group}>
+                                {typeOptions.map((value) => {
+                                    const radio = getRadioProps({ value })
+                                    return (
+                                        <WrapItem key={value}>
+                                            <RadioCard
+                                                key={value}
+                                                {...radio}
+                                                onChange={(e) => handleTypeRadio(e)}>
+                                                {value}
+                                            </RadioCard>
+                                        </WrapItem>
+                                    );
+                                })}
+                            </Wrap>
+                        </FormControl>
 
-                    <FormControl id="feeling" isInvalid={errors.feeling}>
-                        <CUIAutoComplete
-                            label="Selecione os sentimentos"
-                            placeholder="Selecione um sentimento já existente, ou registre um novo"
-                            items={pickerFeelings}
-                            selectedItems={selectedFeelings}
-                            hideToggleButton={true}
-                            onSelectedItemsChange={(changes) =>
-                                handleSelectedItemsChange(changes)
-                            }
-                            disableCreateItem={true}
-                            {...register("feeling", {
-                                required: selectedFeelings.length === 0 ? "Selecione pelo menos um sentimento" : ""
-                            })}
-                        />
-                        <FormErrorMessage>
-                            {errors.feeling && errors.feeling.message}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    <FormControl id="title" isInvalid={errors.title}>
-                        <FormLabel>Título</FormLabel>
-                        <Input
-                            placeholder="Título"
-                            size="lg"
-                            {...register("title", {
-                                required: "Título é obrigatório"
-                            })}
-                        />
-                        <FormErrorMessage>
-                            {errors.title && errors.title.message}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    {mediaComponent !== undefined ? mediaComponent :
-                        <FormControl id="content" isInvalid={errors.content}>
-                            <FormLabel>Conteúdo</FormLabel>
-                            <Textarea
-                                placeholder="Sua poesia aqui!"
-                                size="lg"
-                                {...register("content", {
-                                    required: "Conteúdo é obrigatório"
-                                })} />
+                        <FormControl id="feeling" isInvalid={errors.feeling}>
+                            <CUIAutoComplete
+                                label="Selecione os sentimentos"
+                                placeholder="Selecione um sentimento já existente, ou registre um novo"
+                                items={pickerFeelings}
+                                selectedItems={selectedFeelings}
+                                hideToggleButton={true}
+                                onSelectedItemsChange={(changes) =>
+                                    handleSelectedItemsChange(changes)
+                                }
+                                disableCreateItem={true}
+                                {...register("feeling", {
+                                    required: selectedFeelings.length === 0 ? "Selecione pelo menos um sentimento" : ""
+                                })}
+                            />
                             <FormErrorMessage>
-                                {errors.content && errors.content.message}
+                                {errors.feeling && errors.feeling.message}
                             </FormErrorMessage>
                         </FormControl>
-                    }
 
-                    <FormControl id="description" isInvalid={errors.description}>
-                        <FormLabel>Descrição</FormLabel>
-                        <Textarea
-                            placeholder="Descreva sua obra"
-                            size="lg"
-                            {...register("description", {
-                                required: "Descrição é obrigatória"
-                            })} />
-                        <FormErrorMessage>
-                            {errors.description && errors.description.message}
-                        </FormErrorMessage>
-                    </FormControl>
+                        <FormControl id="title" isInvalid={errors.title}>
+                            <FormLabel>Título</FormLabel>
+                            <Input
+                                placeholder="Título"
+                                size="lg"
+                                {...register("title", {
+                                    required: "Título é obrigatório"
+                                })}
+                            />
+                            <FormErrorMessage>
+                                {errors.title && errors.title.message}
+                            </FormErrorMessage>
+                        </FormControl>
 
-                    <Stack spacing={6}>
-                        <Button
-                            bg={'blue.400'}
-                            color={'white'}
-                            _hover={{
-                                bg: 'blue.500',
-                            }}
-                            isLoading={isSubmitting}
-                            type="submit">
-                            Enviar Arte
+                        {mediaComponent !== undefined ? mediaComponent :
+                            <FormControl id="content" isInvalid={errors.content}>
+                                <FormLabel>Conteúdo</FormLabel>
+                                <Textarea
+                                    placeholder="Sua poesia aqui!"
+                                    size="lg"
+                                    {...register("content", {
+                                        required: "Conteúdo é obrigatório"
+                                    })} />
+                                <FormErrorMessage>
+                                    {errors.content && errors.content.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                        }
+
+                        <FormControl id="description" isInvalid={errors.description}>
+                            <FormLabel>Descrição</FormLabel>
+                            <Textarea
+                                placeholder="Descreva sua obra"
+                                size="lg"
+                                {...register("description", {
+                                    required: "Descrição é obrigatória"
+                                })} />
+                            <FormErrorMessage>
+                                {errors.description && errors.description.message}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <Stack spacing={6}>
+                            <Button
+                                bg={'blue.400'}
+                                color={'white'}
+                                _hover={{
+                                    bg: 'blue.500',
+                                }}
+                                isLoading={isSubmitting}
+                                type="submit">
+                                Enviar Arte
                     </Button>
-                    </Stack>
-                </form>
-            </Stack>
-        </Flex>
+                        </Stack>
+                    </form>
+                </Stack>
+            </Flex>
+        </div>
     );
 }
 
