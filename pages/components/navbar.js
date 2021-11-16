@@ -6,7 +6,6 @@ import {
     Link,
     Text,
     Button,
-    useColorModeValue,
 } from '@chakra-ui/react';
 import { AddIcon, Icon } from '@chakra-ui/icons';
 import { IoLogInOutline } from "react-icons/io5";
@@ -20,7 +19,7 @@ export default function NavBar() {
 
     return (
         <>
-            <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+            <Box bg={'gray.100'} px={4}>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <HStack alignItems={'center'}>
                         <Box>LOGO</Box>
@@ -34,7 +33,7 @@ export default function NavBar() {
                             mx={4}
                             _hover={{
                                 textDecoration: 'none',
-                                bg: useColorModeValue('gray.200', 'gray.700'),
+                                bg: 'gray.200',
                             }}
                             href={'/'}>
                             <Text
