@@ -1,5 +1,6 @@
 import NavBar from "./components/navbar"
 import dynamic from 'next/dynamic'
+import { Box } from "@chakra-ui/layout";
 
 const Feed = dynamic(() => import('./components/feed'), {
   ssr: false
@@ -38,10 +39,10 @@ export async function getServerSideProps() {
 
 export default function Home({ props }) {
     return (
-        <div>
+        <Box bg="#">
             <NavBar></NavBar>
             {/*<NewPost {...props}></NewPost>*/}
             <Feed {...props}></Feed>
-        </div>
+        </Box>
     );
 };

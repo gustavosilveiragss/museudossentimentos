@@ -19,8 +19,7 @@ import {
 } from '@chakra-ui/react';
 import {
   FiMenu,
-  FiLogOut,
-  FiSend
+  FiLogOut
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { RiGalleryLine } from "react-icons/ri";

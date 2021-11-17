@@ -21,7 +21,8 @@ export default async function handler(req, res) {
         type: req.body.type,
         description: req.body.description,
         title: req.body.title,
-        authorUid: req.body.authorUid
+        authorUid: req.body.authorUid,
+        ref: req.body.ref || ""
     }, (responseError) => {
         if (responseError) {
             error = responseError;

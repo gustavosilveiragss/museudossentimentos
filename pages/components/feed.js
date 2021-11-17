@@ -14,10 +14,15 @@ import {
     Spacer,
     Link,
     HStack,
+    IconButton,
 } from '@chakra-ui/react';
+import { FiTrash2 } from 'react-icons/fi';
 import ReactPlayer from 'react-player';
+import { useRouter } from 'next/router';
 
-const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
+const Feed = ({ posts, feelings, typeOptions, userProfile, author }) => {
+    const router = useRouter();
+
     const [filteredPosts, setFilteredPosts] = React.useState(posts);
 
     var feelingsArray = [];
@@ -95,9 +100,9 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
         for (const post of posts) {
             // check if post matches feelings
 
-            if(!feelingsUids.includes(post.feelingUid)) {
+            if (!feelingsUids.includes(post.feelingUid)) {
                 final = final.filter(p => p.uid !== post.uid);
-                
+
                 continue;
             }
 
@@ -120,6 +125,32 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
         }
 
         setFilteredPosts(final);
+    };
+
+    const deletePost = async post => {
+        if (post.ref && post.ref != "") {
+            await fetch(`${process.env.NEXT_PUBLIC_URL}/api/storage/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ref: post.ref
+                })
+            });
+        }
+
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/delete`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uid: post.uid
+            })
+        });
+
+        router.reload(window.location.pathname)
     };
 
     return (
@@ -188,28 +219,39 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                         rounded={'md'}
                         p={6}
                         overflow={'hidden'}>
+                        <Box
+                            zIndex={2}
+                            mb={0}
+                            pos={'relative'}>
+                            <Flex>
+                                <Spacer />
+                                {userProfile && !author ? <IconButton mb={4} padding={0} onClick={() => deletePost(post)} icon={<FiTrash2 />} /> : <div></div>}
+                            </Flex>
+                        </Box>
 
                         {
                             post.url ? (
-                                post.url.split('//').pop().split('/')[0] === "i.imgur.com" ? <Box
-                                    h={'480px'}
-                                    bg={'gray.100'}
-                                    mt={-6}
-                                    mx={-6}
-                                    mb={6}
-                                    pos={'relative'}>
+                                post.url.split('//').pop().split('/')[0] === "i.imgur.com" ?
 
-                                    <Image
-                                        src={post.url}
-                                        layout={'fill'}
-                                        objectFit={"contain"}
-                                    />
-                                </Box>
-                                    :
                                     <Box
+                                        h={'480px'}
+                                        bg={'gray.100'}
+                                        mt={userProfile && !author ? -20 : -6}
+                                        mx={-6}
+                                        mb={6}
+                                        pos={'relative'}>
+
+                                        <Image
+                                            src={post.url}
+                                            layout={'fill'}
+                                            objectFit={"contain"}
+                                        />
+                                    </Box>
+
+                                    : <Box
                                         minH={"200px"}
                                         maxH={"720px"}
-                                        mt={-6}
+                                        mt={userProfile && !author ? -20 : -6}
                                         mx={-6}
                                         mb={6}
                                         pos={'relative'}>
@@ -221,7 +263,9 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                             />
                                         </Center>
                                     </Box>
+
                             )
+
                                 : <Box
                                     minH={"200px"}
                                     maxH={"600px"}
@@ -229,7 +273,6 @@ const Feed = ({ posts, feelings, typeOptions, userProfile }) => {
                                     mx={-6}
                                     mb={6}
                                     pos={'relative'}>
-
                                     <Center
                                         margin="10px">
                                         <Box>

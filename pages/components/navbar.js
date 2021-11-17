@@ -12,6 +12,8 @@ import { IoLogInOutline } from "react-icons/io5";
 import { useRouter } from 'next/router'
 
 import useAuth from '../../hooks/useAuth';
+import Logo from '../../static/logo.svg';
+import Image from 'next/image';
 
 export default function NavBar() {
     const { user } = useAuth();
@@ -21,9 +23,14 @@ export default function NavBar() {
         <>
             <Box bg={'gray.100'} px={4}>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-                    <HStack alignItems={'center'}>
-                        <Box>LOGO</Box>
-                    </HStack>
+                    <Box
+                        height={"50px"}
+                        ml={-4}
+                        mr={5}
+                        width={"140px" /*svg's max width*/}
+                        position={"relative"}>
+                        <Image src={Logo} objectFit={"contain"} layout={"fill"}></Image>
+                    </Box>
 
                     <Flex alignItems={'center'}>
                         {router.pathname === "/" ? <div></div> : <Link

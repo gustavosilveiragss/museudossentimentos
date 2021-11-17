@@ -229,9 +229,9 @@ const NewPost = ({ feelings, typeOptions }) => {
 
         const storageRef = firebase.storage().ref();
 
-        console.log("await values.selectedFile.");
+        const fileUid = uuidv4();
 
-        var fileRef = storageRef.child(`${type}/${uuidv4()}.${extension}`);
+        var fileRef = storageRef.child(`${type}/${fileUid}.${extension}`);
 
         // sim, eu poderia pegar a url ali no ref, mas preferi ir pelo try catch só pq sim
         var fileUrl = "";
@@ -248,6 +248,7 @@ const NewPost = ({ feelings, typeOptions }) => {
 
         values.selectedFile = null;
         values.url = fileUrl;
+        values.ref = `${type}/${fileUid}.${extension}`;
 
         return values;
     };
