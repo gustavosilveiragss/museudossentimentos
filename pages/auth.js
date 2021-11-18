@@ -72,7 +72,7 @@ const Auth = () => {
           <Box
             rounded={'lg'}
             bg={useColorModeValue('white', 'gray.700')}
-            boxShadow={'lg'}
+            boxShadow={'xl'}
             p={8}>
             <Stack spacing={4}>
               <Button

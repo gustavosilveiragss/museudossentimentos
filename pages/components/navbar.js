@@ -58,11 +58,17 @@ export default function NavBar() {
                                     }}>
                                     <Button
                                         variant={'solid'}
-                                        colorScheme={'teal'}
+                                        bg={'#F8DC89'}
                                         size={'md'}
                                         mr={4}
+                                        color={'white'}
+                                        _hover={{
+                                            bg: "#E9B96A"
+                                        }}
                                         leftIcon={<AddIcon />}>
-                                        nova arte
+                                        <Text color={"white"}>
+                                            nova arte
+                                        </Text>
                                 </Button>
                                 </Link> : <Box></Box>}
 
@@ -77,17 +83,22 @@ export default function NavBar() {
                                 />
                             </Link> :
                                 <Link
-                                    href={"auth"}
+                                    href={"/auth"}
                                     _hover={{
                                         textDecoration: 'none'
                                     }}>
                                     <Button
                                         variant={'solid'}
-                                        colorScheme={'blue'}
+                                        bg={'#F8DC89'}
                                         size={'md'}
                                         mr={4}
-                                        leftIcon={<Icon as={IoLogInOutline} w={6} h={6} />}>
-                                        entrar
+                                        _hover={{
+                                            bg: "#E9B96A"
+                                        }}
+                                        leftIcon={<Icon color={'white'} as={IoLogInOutline} w={6} h={6} />}>
+                                        <Text color={"white"}>
+                                            entrar
+                                        </Text>
                                 </Button>
                                 </Link>}
                         </HStack>}
