@@ -268,7 +268,6 @@ const Feed = ({ posts, feelings, typeOptions, userProfile, author }) => {
 
                                 : <Box
                                     minH={"200px"}
-                                    maxH={"600px"}
                                     mt={-6}
                                     mx={-6}
                                     mb={6}

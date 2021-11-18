@@ -366,8 +366,8 @@ const NewPost = ({ feelings, typeOptions }) => {
 
                         <FormControl id="feeling" isInvalid={errors.feeling}>
                             <CUIAutoComplete
-                                label="Selecione os sentimentos"
-                                placeholder="Selecione um sentimento já existente, ou registre um novo"
+                                label="Selecione o sentimento"
+                                placeholder="Selecione um sentimento"
                                 items={pickerFeelings}
                                 selectedItems={selectedFeelings}
                                 hideToggleButton={true}
