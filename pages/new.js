@@ -10,6 +10,7 @@ export async function getServerSideProps() {
     const typeOptions = [
         "poesia",
         "pintura",
+        "desenho",
         "escultura",
         "fotografia",
         "vídeo",

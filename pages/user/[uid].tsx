@@ -32,6 +32,7 @@ AuthorProfile.getInitialProps = async ({ query }) => {
     typeOptions: [
       "poesia",
       "pintura",
+      "desenho",
       "escultura",
       "fotografia",
       "vídeo",

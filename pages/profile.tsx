@@ -96,6 +96,7 @@ Profile.getInitialProps = async (ctx) => {
     typeOptions: [
       "poesia",
       "pintura",
+      "desenho",
       "escultura",
       "fotografia",
       "vídeo",

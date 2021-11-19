@@ -108,6 +108,7 @@ const NewPost = ({ feelings, typeOptions }) => {
                 );
                 break;
             case "pintura":
+            case "desenho":
             case "fotografia":
                 buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
                 break;
@@ -174,6 +175,7 @@ const NewPost = ({ feelings, typeOptions }) => {
         switch (type) {
             case "fotografia":
             case "pintura":
+            case "desenho":
                 values = await handleImgurUpload(values);
 
                 break;
@@ -298,6 +300,7 @@ const NewPost = ({ feelings, typeOptions }) => {
     const caguei = type => {
         switch (type) {
             case "pintura":
+            case "desenho":
             case "fotografia":
                 buildDropzone("image/jpeg, image/png", ".jpeg ou .png", "20mb");
                 break;
