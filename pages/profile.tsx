@@ -27,6 +27,8 @@ import { ReactText } from 'react';
 import Feed from './components/feed';
 import useAuth from '../hooks/useAuth';
 import Router from 'next/router';
+import Logo from '../static/logo.svg';
+import Image from 'next/image';
 
 function Profile({
   children,
@@ -130,15 +132,18 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <Box
+          height={"50px"}
+          width={"140px" /*svg's max width*/}
+          position={"relative"}>
+          <Image src={Logo} objectFit={"contain"} layout={"fill"}></Image>
+        </Box>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <NavItem key="Exibição" icon={RiGalleryLine} onclick={() => Router.push('/')}>
         Exibição
       </NavItem>
-      <NavItem key="Sair" icon={FiLogOut} onclick={signout}>  
+      <NavItem key="Sair" icon={FiLogOut} onclick={signout}>
         Sair
       </NavItem>
     </Box>
@@ -151,7 +156,7 @@ interface NavItemProps extends FlexProps {
   onclick: any;
 }
 
-const NavItem = ({ icon, children, onclick}: NavItemProps) => {
+const NavItem = ({ icon, children, onclick }: NavItemProps) => {
   return (
     <Link href="#" onClick={onclick} style={{ textDecoration: 'none' }}>
       <Flex
@@ -197,13 +202,13 @@ const MobileNav = ({ onOpen, user, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       />
 
-      <Text
-        display={{ base: 'flex', md: 'none' }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold">
-        Logo
-      </Text>
+      <Box
+        height={"50px"}
+        width={"140px" /*svg's max width*/}
+        position={"relative"}
+        display={{ base: 'flex', md: 'none' }}>
+        <Image src={Logo} objectFit={"contain"} layout={"fill"}></Image>
+      </Box>
 
       <HStack spacing={{ base: '0', md: '6' }}>
         <Flex alignItems={'center'}>
